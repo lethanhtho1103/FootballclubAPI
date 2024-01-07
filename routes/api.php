@@ -4,6 +4,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PlayerController;
+use App\Http\Controllers\CoachController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -15,14 +18,38 @@ use App\Http\Controllers\AuthController;
 |
 */
 
+Route::post('/register', [AuthController::class, 'register']);
+
+
+/* For Auth */
 Route::group([
-
     'middleware' => 'api',
-    'prefix' => 'auth'
+], function () {
+    Route::group(
+        [
+            'prefix' => 'auth',
+        ],
+        function () {
+            Route::post('/login_user', [AuthController::class, 'loginUser']);
+            Route::post('/login', [AuthController::class, 'loginByID']);
+            Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
+            Route::post('/logout', [AuthController::class, 'logout']);
+            Route::post('/me', [AuthController::class, 'me']);
+        }
+    );
+    // Route::put('user/change-password', [UserController::class, 'changePassword']);
 
-], function ($router) {
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::post('/refresh', [AuthController::class, 'refresh']);
-    Route::post('/me', [AuthController::class, 'me']);
+    /* For Admin and Staff*/
+    Route::group([
+        'middleware' => 'check.admin.staff',
+        'prefix' => 'admin'
+    ], function () {
+        Route::post('/register-player', [PlayerController::class, 'register']);
+        Route::post('/register-coach', [CoachController::class, 'register']);
+    });
+
+    /* For Member */
+
 });
+
+/* For Guest */

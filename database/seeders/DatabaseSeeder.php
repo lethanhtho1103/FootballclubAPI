@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
         // Thêm dữ liệu users
         $users = [
             [
-                'user_id' => 'A0123456',
+                'user_id' => 'A1234567',
                 'name' => 'Admin',
                 'email' => 'admin@gmail.com',
                 'password' => Hash::make('password'),
@@ -55,7 +55,6 @@ class DatabaseSeeder extends Seeder
                 'nationality' => 'England',
                 'role_ID' => 4, // ID của quyền player
             ],
-            // Thêm user khác nếu cần
         ];
 
         // Chèn dữ liệu vào bảng Users

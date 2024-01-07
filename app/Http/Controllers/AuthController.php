@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 
 class AuthController extends Controller
@@ -18,7 +19,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login', 'register']]);
+        $this->middleware('auth:api', ['except' => ['loginUser', 'loginByID']]);
     }
 
     /**
@@ -26,36 +27,34 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login(Request $request)
+
+    public function loginUser(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ]);
+        $credentials = $request->only('email', 'password');
 
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 422);
-        }
-
-        $user = User::where('email', $request->email)->first();
-
-        if (!$user) {
-            return response()->json(['error' => 'Email not found'], 404);
-        }
-
-        if (!Hash::check($request->password, $user->password)) {
-            return response()->json(['error' => 'Incorrect password'], 401);
-        }
-
-        $token = auth()->attempt($validator->validated());
+        $token = auth()->attempt($credentials);
 
         if (!$token) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
+
         return $this->respondWithToken($token);
     }
 
+    public function loginByID(Request $request)
+    {
+        $credentials = $request->only('user_id', 'password');
+
+        $token = auth()->attempt($credentials);
+
+        if (!$token) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+
+        return $this->respondWithToken($token);
+    }
 
 
     /**
