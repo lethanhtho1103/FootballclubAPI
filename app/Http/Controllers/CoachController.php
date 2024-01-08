@@ -70,6 +70,6 @@ class CoachController extends Controller
             'draws' => $validatedData['draws'] ?? 0,
         ]);
 
-        return response()->json(['message' => 'Coach registered successfully', 'images' => $imagesPaths]);
+        return response()->json(['message' => 'Coach registered successfully']);
     }
 }

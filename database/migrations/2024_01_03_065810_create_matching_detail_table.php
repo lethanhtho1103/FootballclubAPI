@@ -13,11 +13,14 @@ return new class extends Migration
     {
         Schema::create('matching_detail', function (Blueprint $table) {
             $table->unsignedInteger('matching_id');
+            $table->unsignedInteger('user_id')->nullable();
             $table->string('player_name', 50);
             $table->integer('jersey_number');
             $table->boolean('is_away')->default(0);
             $table->string('type', 100);
             $table->timestamp('time')->useCurrent();
+
+            $table->foreign('user_id')->references('uer_id')->on('users')->onDelete('cascade')->nullable();
             $table->foreign('matching_id')->references('matching_id')->on('matching')->onDelete('cascade');
         });
     }
