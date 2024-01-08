@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\CoachController;
-use App\Http\Controllers\CoachTestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +20,6 @@ use App\Http\Controllers\CoachTestController;
 
 Route::post('/register', [AuthController::class, 'register']);
 
-Route::post('/register-coach', [CoachTestController::class, 'register']);
 
 /* For Auth */
 Route::group([
