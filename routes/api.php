@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\CoachController;
+use App\Http\Controllers\CustomerController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -18,13 +20,12 @@ use App\Http\Controllers\CoachController;
 |
 */
 
-Route::post('/register', [AuthController::class, 'register']);
-
-
 /* For Auth */
 Route::group([
     'middleware' => 'api',
 ], function () {
+
+
     Route::group(
         [
             'prefix' => 'auth',
@@ -53,3 +54,4 @@ Route::group([
 });
 
 /* For Guest */
+Route::post('/register_user', [CustomerController::class, 'register']);

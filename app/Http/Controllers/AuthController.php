@@ -104,35 +104,4 @@ class AuthController extends Controller
             'expires_in' => auth()->factory()->getTTL() * 60
         ]);
     }
-
-
-    public function register(Request $request)
-    {
-        try {
-            $validatedData = $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|string|email|unique:users,email',
-                'password' => 'required|string|min:8',
-                'phone' => 'nullable|string|size:10|unique:users,phone',
-            ]);
-
-            $user = $this->createUser($validatedData);
-
-            return response()->json(['message' => 'User registered successfully', 'user' => $user]);
-        } catch (ValidationException $e) {
-            return response()->json(['error' => $e->errors()], 422);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    }
-
-    protected function createUser(array $validatedData)
-    {
-        return User::create([
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
-            'password' => Hash::make($validatedData['password']),
-            'phone' => $validatedData['phone'],
-        ]);
-    }
 }
