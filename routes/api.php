@@ -31,7 +31,7 @@ Route::group([
             'prefix' => 'auth',
         ],
         function () {
-            Route::post('/login_user', [AuthController::class, 'loginUser']);
+            Route::post('/login-user', [AuthController::class, 'loginUser']);
             Route::post('/login', [AuthController::class, 'loginByID']);
             Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
             Route::post('/logout', [AuthController::class, 'logout']);
@@ -47,6 +47,11 @@ Route::group([
     ], function () {
         Route::post('/register-player', [PlayerController::class, 'register']);
         Route::post('/register-coach', [CoachController::class, 'register']);
+
+        /* For Admin */
+
+
+        /* For Staff */
     });
 
     /* For Member */
@@ -54,4 +59,4 @@ Route::group([
 });
 
 /* For Guest */
-Route::post('/register_user', [CustomerController::class, 'register']);
+Route::post('/register-user', [CustomerController::class, 'register']);
