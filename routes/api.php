@@ -32,7 +32,7 @@ Route::group([
         ],
         function () {
             Route::post('/login-user', [AuthController::class, 'loginUser']);
-            Route::post('/login', [AuthController::class, 'loginByID']);
+            Route::post('/login-admin', [AuthController::class, 'loginByID']);
             Route::post('/refresh-token', [AuthController::class, 'refreshToken']);
             Route::post('/logout', [AuthController::class, 'logout']);
             Route::post('/me', [AuthController::class, 'me']);
