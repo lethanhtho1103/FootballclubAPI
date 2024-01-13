@@ -4,28 +4,49 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
+use Exception;
+
+use App\Helpers\UserHelper;
+use App\Services\UploadService;
+use App\Services\ValidationService;
 
 use App\Models\User;
 
+
 class CustomerController extends Controller
 {
+    private $uploadService;
+    private $validationService;
+
+    public function __construct(UploadService $uploadService, ValidationService $validationService)
+    {
+        $this->uploadService = $uploadService;
+        $this->validationService = $validationService;
+    }
+
     public function register(Request $request) {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,Email',
-            'password' => 'required|string|max:255',
-        ]);
+        try {
+            $validatedData = $this->validationService->getUserValidationRules($request);
 
-        $maxUserId = User::where('user_id', 'like', 'U%')->max('user_id');
-        $userID = 'U' . str_pad(($maxUserId ? (int) substr($maxUserId, 1) : 0) + 1, 7, '0', STR_PAD_LEFT);
+            // Thực hiện xác thực dữ liệu
+            $this->validate($request, $validatedData);
 
-        $user = User::create([
-            'user_id' => $userID ?? 'U0000001',
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
-            'password' => Hash::make($validatedData['password'])
-        ]);
+            $userID = UserHelper::generateUserID('U');
 
-        return response()->json(['message' => 'User registered successfully', 'user' => $user]);
+            $user = User::create([
+                'user_id' => $userID ?? 'U0000000',
+                'name' => $request['name'],
+                'email' => $request['email'],
+                'password' => Hash::make($request['password'])
+            ]);
+
+            return response()->json(['message' => 'User registered successfully', 'user' => $user]);
+
+        } catch (ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 400);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
 }

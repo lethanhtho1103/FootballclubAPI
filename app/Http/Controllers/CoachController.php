@@ -4,72 +4,65 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
+use Exception;
 
+use App\Services\UploadService;
+use App\Services\ValidationService;
+use App\Helpers\UserHelper;
 use App\Models\User;
 use App\Models\Coach;
 
 class CoachController extends Controller
 {
+    private $uploadService;
+    private $validationService;
+
+    public function __construct(UploadService $uploadService, ValidationService $validationService)
+    {
+        $this->uploadService = $uploadService;
+        $this->validationService = $validationService;
+    }
+
     public function register(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,Email',
-            'password' => 'required|string|max:255',
-            'date_of_birth' => 'date',
-            'nationality' => 'string|max:100',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
-            'wins' => 'integer',
-            'losses' => 'integer',
-            'draws' => 'integer',
-        ]);
+        try {
+            // Lấy các quy tắc xác thực từ ValidationService
+            $validatedData = $this->validationService->getUserValidationRules($request)
+                            + $this->validationService->getCoachValidationRules($request);
 
-        $maxUserId = User::where('user_id', 'like', 'C%')->max('user_id');
-        $userID = 'C' . str_pad(($maxUserId ? (int) substr($maxUserId, 1) : 0) + 1, 7, '0', STR_PAD_LEFT);
+            // Thực hiện xác thực dữ liệu
+            $this->validate($request, $validatedData);
 
+            // Tạo user ID độc nhất cho HLV
+            $userID = UserHelper::generateUserID('C');
 
-        $imagesPaths = [];
+            // Upload ảnh với sự trợ giúp của UploadService
+            $imagesPaths = $this->uploadService->uploadImages($request, $userID);
 
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                if ($image->isValid()) {
-                    $imageName = time() . Str::random(10) . '.' . $image->getClientOriginalExtension();
+            $user = User::create([
+                'user_id' => $userID ?? 'C0000000',
+                'name' => $request['name'],
+                'email' => $request['email'],
+                'password' => Hash::make($request['password']),
+                'date_of_birth' =>  $request['date_of_birth'],
+                'nationality' => $request['nationality'],
+                'role_id' => 3,
+                'images' => json_encode($imagesPaths),
+            ]);
 
-                    $imagePath = $image->storeAs("upload/users/{$userID}", $imageName, 'public');
+            $coach = Coach::create([
+                'user_id' => $userID,
+                'wins' => $request['wins'] ?? 0,
+                'losses' => $request['losses'] ?? 0,
+                'draws' => $request['draws'] ?? 0,
+            ]);
 
-                    if ($imagePath) {
-                        $imagesPaths[] = Storage::url($imagePath);
-                    } else {
-                        // Xử lý lỗi khi không thể lưu trữ hình ảnh
-                        return response()->json(['error' => 'Failed to store image'], 500);
-                    }
-                } else {
-                    // Xử lý lỗi khi hình ảnh không hợp lệ
-                    return response()->json(['error' => 'Invalid image file'], 400);
-                }
-            }
+            return response()->json(['message' => 'Coach registered successfully', 'user' => $user]);
+        } catch (ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 400);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
-
-        $user = User::create([
-            'user_id' => $userID,
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
-            'password' => Hash::make($validatedData['password']),
-            'date_of_birth' => $validatedData['date_of_birth'],
-            'nationality' => $validatedData['nationality'],
-            'role_id' => 3,
-            'image' => json_encode($imagesPaths),
-        ]);
-
-        $coach = Coach::create([
-            'user_id' => $userID,
-            'wins' => $validatedData['wins'] ?? 0,
-            'losses' => $validatedData['losses'] ?? 0,
-            'draws' => $validatedData['draws'] ?? 0,
-        ]);
-
-        return response()->json(['message' => 'Coach registered successfully']);
     }
 }

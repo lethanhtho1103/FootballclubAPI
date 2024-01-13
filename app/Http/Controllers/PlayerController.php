@@ -4,73 +4,68 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
+use Exception;
+
+use App\Services\UploadService;
+use App\Services\ValidationService;
+use App\Helpers\UserHelper;
 
 use App\Models\User;
 use App\Models\Player;
 
 class PlayerController extends Controller
 {
-    // Register player
+    private $uploadService;
+    private $validationService;
+
+    public function __construct(UploadService $uploadService, ValidationService $validationService)
+    {
+        $this->uploadService = $uploadService;
+        $this->validationService = $validationService;
+    }
+
     public function register(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,Email',
-            'password' => 'required|string|max:255',
-            'date_of_birth' => 'date',
-            'nationality' => 'string|max:100',
-            'position' => 'string|max:100',
-            'jersey_number' => 'integer',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Accept multiple images
-        ]);
+        try {
+            // Lấy các quy tắc xác thực từ ValidationService
+            $validatedData = $this->validationService->getUserValidationRules($request)
+                            + $this->validationService->getPlayerValidationRules($request);
 
-        $maxUserId = User::where('user_id', 'like', 'P%')->max('user_id');
-        $userID = 'P' . str_pad(($maxUserId ? (int) substr($maxUserId, 1) : 0) + 1, 7, '0', STR_PAD_LEFT);
+            // Thực hiện xác thực dữ liệu
+            $this->validate($request, $validatedData);
 
+            // Tạo user ID độc nhất cho HLV
+            $userID = UserHelper::generateUserID('P');
 
-        $imagesPaths = [];
+            // Upload ảnh với sự trợ giúp của UploadService
+            $imagesPaths = $this->uploadService->uploadImages($request, $userID);
 
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                if ($image->isValid()) {
-                    $imageName = time() . Str::random(10) . '.' . $image->getClientOriginalExtension();
+            $user = User::create([
+                'user_id' => $userID,
+                'name' => $request['name'],
+                'email' => $request['email'],
+                'password' => Hash::make($request['password']),
+                'date_of_birth' =>  $request['date_of_birth'],
+                'nationality' => $request['nationality'],
+                'role_id' => 4,
+                'images' => json_encode($imagesPaths),
+            ]);
 
-                    $imagePath = $image->storeAs("upload/users/{$userID}", $imageName, 'public');
+            $player = Player::create([
+                'user_id' => $userID ?? 'P0000000',
+                'goal' => 0,
+                'assist' => 0,
+                'position' => $request['position'],
+                'jersey_number' => $request['jersey_number'],
+            ]);
 
-                    if ($imagePath) {
-                        $imagesPaths[] = Storage::url($imagePath);
-                    } else {
-                        // Xử lý lỗi khi không thể lưu trữ hình ảnh
-                        return response()->json(['error' => 'Failed to store image'], 500);
-                    }
-                } else {
-                    // Xử lý lỗi khi hình ảnh không hợp lệ
-                    return response()->json(['error' => 'Invalid image file'], 400);
-                }
-            }
+            return response()->json(['message' => 'Player registered successfully', 'user' => $user]);
+
+        } catch (ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 400);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
-
-        $user = User::create([
-            'user_id' => $userID,
-            'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
-            'password' => Hash::make($validatedData['password']),
-            'date_of_birth' => $validatedData['date_of_birth'],
-            'nationality' => $validatedData['nationality'],
-            'role_id' => 4, // Player role
-            'images' => json_encode($imagesPaths),
-        ]);
-
-        $player = Player::create([
-            'user_id' => $userID,
-            'goal' => 0,
-            'assist' => 0,
-            'position' => $validatedData['position'],
-            'jersey_number' => $validatedData['jersey_number'],
-        ]);
-
-        return response()->json(['message' => 'Player registered successfully']);
     }
 }
