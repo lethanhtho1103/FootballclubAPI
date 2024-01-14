@@ -28,7 +28,7 @@ class CustomerController extends Controller
     public function register(Request $request) {
         try {
             $validatedData = $this->validationService->getUserValidationRules($request);
-
+            $validatedData['confirm_password'] = 'required|string|same:password';
             // Thực hiện xác thực dữ liệu
             $this->validate($request, $validatedData);
 

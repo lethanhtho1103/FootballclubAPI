@@ -10,7 +10,6 @@ class ValidationService
             'name' => 'required|string|max:50',
             'email' => 'required|email|unique:users,Email',
             'password' => 'required|string|min:8|max:50',
-            'confirm_password' => 'required|string|same:password',
             'date_of_birth' => 'date',
             'nationality' => 'string|max:50',
             'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
