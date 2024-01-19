@@ -12,7 +12,7 @@ class ValidationService
             'password' => 'required|string|min:8|max:50',
             'date_of_birth' => 'date',
             'nationality' => 'string|max:50',
-            'images.*' => 'image|mimes:jpeg,png,jpg|max:2048',
+            'images.*' => 'image|mimes:jpeg,png,jpg,webp,PNG,JPG|max:2048',
         ];
     }
 
