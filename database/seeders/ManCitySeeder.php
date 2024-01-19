@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Helpers\UserHelper;
 use App\Models\User;
 use App\Models\Player;
+use App\Models\Coach;
 
 class ManCitySeeder extends Seeder
 {
@@ -66,6 +67,43 @@ class ManCitySeeder extends Seeder
                 'assist' => 0,
                 'position' => $playerData['position'],
                 'jersey_number' => $playerData['jersey_number'],
+                'detail' => 'abc123'
+            ]);
+        }
+
+        // Dữ liệu HLV Manchester City
+        $manCityCoaches = [
+            [
+                'name' => 'Pep Guardiola',
+                'email' => 'pep@example.com',
+                'date_of_birth' => '1971-01-18',
+                'nationality' => 'Spain',
+                'role_id' => 3, // ID của quyền HLV
+            ],
+        ];
+
+        foreach ($manCityCoaches as $coachData) {
+            // Tạo user ID độc nhất cho HLV
+            $coachID = UserHelper::generateUserID('C');
+
+            // Thêm user vào bảng Users
+            $user = User::create([
+                'user_id' => $coachID,
+                'name' => $coachData['name'],
+                'email' => $coachData['email'],
+                'password' => Hash::make('password'),
+                'date_of_birth' => $coachData['date_of_birth'],
+                'nationality' => $coachData['nationality'],
+                'role_id' => $coachData['role_id'],
+            ]);
+
+            // Thêm HLV vào bảng Coaches
+            Coach::create([
+                'user_id' => $coachID,
+                'wins' => 0,
+                'losses' => 0,
+                'draws' => 0,
+                'detail' => 'abc123'
             ]);
         }
     }

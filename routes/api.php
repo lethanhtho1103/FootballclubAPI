@@ -65,3 +65,7 @@ Route::post('/register-user', [CustomerController::class, 'register']);
 // Players
 Route::get('/players', [PlayerController::class, 'index']);
 Route::get('/players/{slug}', [PlayerController::class, 'show']);
+
+//Coaches
+Route::get('/coaches', [CoachController::class, 'index']);
+Route::get('/coaches/{slug}', [CoachController::class, 'show']);

@@ -17,6 +17,7 @@ class Coach extends Model
         'losses',
         'draws',
     ];
+    public $incrementing = false; // Sử dụng ID không tự tăng
 
     public $timestamps = false; // Không sử dụng timestamps
 

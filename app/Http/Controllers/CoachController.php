@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Exception;
 
 use App\Services\UploadService;
@@ -63,6 +64,68 @@ class CoachController extends Controller
             return response()->json(['errors' => $e->errors()], 400);
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+    // Get coach
+
+    public function index()
+    {
+        try {
+            $coaches = Coach::with('user:id,user_id,name,email,date_of_birth,nationality,images,role_id,created_at,updated_at')
+                ->get();
+
+            $formattedcoaches = $coaches->map(function ($coach) {
+                return [
+                    'user_id' => $coach->user->user_id,
+                    'name' => $coach->user->name,
+                    'email' => $coach->user->email,
+                    'date_of_birth' => $coach->user->date_of_birth,
+                    'nationality' => $coach->user->nationality,
+                    'images' => $coach->user->images,
+
+                    'wins' => $coach->wins,
+                    'losses' => $coach->losses,
+                    'draws' => $coach->draws,
+                    'detail' => $coach->detail,
+                ];
+            });
+
+            return response()->json(['coaches' => $formattedcoaches], 200);
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function show($slug)
+    {
+        try {
+            // Chuyển đổi slug thành tên
+            $name = Str::title(str_replace('-', ' ', $slug));
+
+            // Tìm HLV dựa trên tên
+            $coach = Coach::join('users', 'coaches.user_id', '=', 'users.user_id')
+                ->select('coaches.*', 'users.name as user_name', 'users.email', 'users.date_of_birth', 'users.nationality', 'users.images', 'users.role_id', 'users.created_at as user_created_at', 'users.updated_at as user_updated_at')
+                ->where('users.name', $name)
+                ->firstOrFail();
+
+            $formattedCoach = [
+                'user_id' => $coach->user->user_id,
+                'name' => $coach->user->name,
+                'email' => $coach->user->email,
+                'date_of_birth' => $coach->user->date_of_birth,
+                'nationality' => $coach->user->nationality,
+                'images' => $coach->user->images,
+
+                'wins' => $coach->wins,
+                'losses' => $coach->losses,
+                'draws' => $coach->draws,
+                'detail' => $coach->detail,
+            ];
+
+            return response()->json(['coach' => $formattedCoach], 200);
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 404);
         }
     }
 }
