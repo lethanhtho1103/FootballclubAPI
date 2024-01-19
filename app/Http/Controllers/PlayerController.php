@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Exception;
 
 use App\Services\UploadService;
@@ -30,7 +31,7 @@ class PlayerController extends Controller
         try {
             // Lấy các quy tắc xác thực từ ValidationService
             $validatedData = $this->validationService->getUserValidationRules($request)
-                            + $this->validationService->getPlayerValidationRules($request);
+                + $this->validationService->getPlayerValidationRules($request);
 
             // Thực hiện xác thực dữ liệu
             $this->validate($request, $validatedData);
@@ -46,7 +47,7 @@ class PlayerController extends Controller
                 'name' => $request['name'],
                 'email' => $request['email'],
                 'password' => Hash::make($request['password']),
-                'date_of_birth' =>  $request['date_of_birth'],
+                'date_of_birth' => $request['date_of_birth'],
                 'nationality' => $request['nationality'],
                 'role_id' => 4,
                 'images' => json_encode($imagesPaths),
@@ -68,4 +69,68 @@ class PlayerController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+
+    // Get players
+    public function index()
+    {
+        try {
+            $players = Player::with('user:id,user_id,name,email,date_of_birth,nationality,images,role_id,created_at,updated_at')
+                ->get();
+
+            $formattedPlayers = $players->map(function ($player) {
+                return [
+                    'user_id' => $player->user->user_id,
+                    'name' => $player->user->name,
+                    'email' => $player->user->email,
+                    'date_of_birth' => $player->user->date_of_birth,
+                    'nationality' => $player->user->nationality,
+                    'images' => $player->user->images,
+                    'goal' => $player->goal,
+                    'assist' => $player->assist,
+                    'position' => $player->position,
+                    'jersey_number' => $player->jersey_number,
+                    'detail' => $player->detail,
+                ];
+            });
+
+            return response()->json(['players' => $formattedPlayers], 200);
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function show($slug)
+    {
+        try {
+            // Chuyển đổi slug thành tên
+            $name = Str::title(str_replace('-', ' ', $slug));
+
+            // Tìm cầu thủ dựa trên tên
+            $player = Player::join('users', 'players.user_id', '=', 'users.user_id')
+            ->select('players.*', 'users.name as user_name', 'users.email', 'users.date_of_birth', 'users.nationality', 'users.images', 'users.role_id', 'users.created_at as user_created_at', 'users.updated_at as user_updated_at')
+            ->where('users.name', $name)
+            ->firstOrFail();
+
+            $formattedPlayer = [
+                'user_id' => $player->user->user_id,
+                'name' => $player->user->name,
+                'email' => $player->user->email,
+                'date_of_birth' => $player->user->date_of_birth,
+                'nationality' => $player->user->nationality,
+                'images' => $player->user->images,
+                'goal' => $player->goal,
+                'assist' => $player->assist,
+                'position' => $player->position,
+                'jersey_number' => $player->jersey_number,
+                'detail' => $player->detail,
+            ];
+
+            return response()->json(['player' => $formattedPlayer], 200);
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 404);
+        }
+    }
+
+
 }

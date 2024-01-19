@@ -60,3 +60,8 @@ Route::group([
 
 /* For Guest */
 Route::post('/register-user', [CustomerController::class, 'register']);
+
+
+// Players
+Route::get('/players', [PlayerController::class, 'index']);
+Route::get('/players/{slug}', [PlayerController::class, 'show']);

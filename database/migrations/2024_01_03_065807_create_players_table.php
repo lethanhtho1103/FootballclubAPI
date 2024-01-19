@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('assist')->default(0);
             $table->string('position', 100)->nullable();
             $table->integer('jersey_number')->nullable();
+            $table->text('detail')->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
         });

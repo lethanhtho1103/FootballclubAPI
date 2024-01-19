@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer('wins')->default(0);
             $table->integer('losses')->default(0);
             $table->integer('draws')->default(0);
+            $table->text('detail')->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
         });
