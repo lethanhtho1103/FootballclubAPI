@@ -8,27 +8,26 @@ use Exception;
 
 class UploadService
 {
-    public function uploadImages($request, $userID)
+    public function uploadImage($request, $userID)
     {
-        $imagesPaths = [];
+        $imagePath = '';
 
-            if ($request->hasFile('images')) {
-                foreach ($request->file('images') as $image) {
-                    if ($image->isValid()) {
-                        $imageName = time() . Str::random(10) . '.' . $image->getClientOriginalExtension();
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
 
-                        $imagePath = $image->storeAs("upload/users/{$userID}", $imageName, 'public');
+            if ($image->isValid()) {
+                $imageName = time() . Str::random(10) . '.' . $image->getClientOriginalExtension();
 
-                        if ($imagePath) {
-                            $imagesPaths[] = Storage::url($imagePath);
-                        } else {
-                            throw new Exception('Failed to store image');
-                        }
-                    } else {
-                        throw new Exception('Invalid image file');
-                    }
+                $imagePath = $image->storeAs("upload/users/{$userID}", $imageName, 'public');
+
+                if (!$imagePath) {
+                    throw new Exception('Failed to store image');
                 }
+            } else {
+                throw new Exception('Invalid image file');
             }
-        return $imagesPaths;
+        }
+
+        return Storage::url($imagePath);
     }
 }

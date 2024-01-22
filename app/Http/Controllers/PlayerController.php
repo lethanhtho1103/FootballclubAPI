@@ -40,7 +40,7 @@ class PlayerController extends Controller
             $userID = UserHelper::generateUserID('P');
 
             // Upload ảnh với sự trợ giúp của UploadService
-            $imagesPaths = $this->uploadService->uploadImages($request, $userID);
+            $imagesPath= $this->uploadService->uploadImage($request, $userID);
 
             $user = User::create([
                 'user_id' => $userID,
@@ -50,7 +50,7 @@ class PlayerController extends Controller
                 'date_of_birth' => $request['date_of_birth'],
                 'nationality' => $request['nationality'],
                 'role_id' => 4,
-                'images' => json_encode($imagesPaths),
+                'image' => $imagesPath,
             ]);
 
             $player = Player::create([
