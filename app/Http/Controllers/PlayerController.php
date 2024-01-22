@@ -85,7 +85,7 @@ class PlayerController extends Controller
                     'email' => $player->user->email,
                     'date_of_birth' => $player->user->date_of_birth,
                     'nationality' => $player->user->nationality,
-                    'images' => $player->user->images,
+                    'image' => $player->user->image,
                     'goal' => $player->goal,
                     'assist' => $player->assist,
                     'position' => $player->position,
