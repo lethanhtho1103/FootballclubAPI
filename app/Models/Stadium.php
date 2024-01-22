@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Stadium extends Model
 {
+    use HasFactory;
+
     protected $primaryKey = 'stadium_id';
 
     protected $fillable = [
@@ -20,8 +23,8 @@ class Stadium extends Model
         'updated_at',
     ];
 
-    public function matches()
+    public function games()
     {
-        return $this->hasMany(Matching::class, 'stadium_id', 'stadium_id');
+        return $this->hasMany(Game::class, 'club_id', 'club_id');
     }
 }

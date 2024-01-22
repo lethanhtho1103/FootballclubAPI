@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('team_lineup', function (Blueprint $table) {
             $table->increments('lineup_id');
-            $table->unsignedInteger('matching_id');
+            $table->unsignedInteger('game_id');
             $table->string('user_id', 10);
             $table->string('position', 100);
             $table->boolean('is_starting_player');
             $table->string('formation', 10);
-            $table->foreign('matching_id')->references('matching_id')->on('matching')->onDelete('cascade');
+            $table->foreign('game_id')->references('game_id')->on('games')->onDelete('cascade');
             $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

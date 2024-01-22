@@ -40,7 +40,7 @@ class PlayerController extends Controller
             $userID = UserHelper::generateUserID('P');
 
             // Upload ảnh với sự trợ giúp của UploadService
-            $imagesPath= $this->uploadService->uploadImage($request, $userID);
+            $imagePath= $this->uploadService->uploadImage($request, $userID);
 
             $user = User::create([
                 'user_id' => $userID,
@@ -50,7 +50,7 @@ class PlayerController extends Controller
                 'date_of_birth' => $request['date_of_birth'],
                 'nationality' => $request['nationality'],
                 'role_id' => 4,
-                'image' => $imagesPath,
+                'image' => $imagePath,
             ]);
 
             $player = Player::create([
@@ -75,7 +75,7 @@ class PlayerController extends Controller
     public function index()
     {
         try {
-            $players = Player::with('user:id,user_id,name,email,date_of_birth,nationality,images,role_id,created_at,updated_at')
+            $players = Player::with('user:id,user_id,name,email,date_of_birth,nationality,image,role_id,created_at,updated_at')
                 ->get();
 
             $formattedPlayers = $players->map(function ($player) {
@@ -108,7 +108,7 @@ class PlayerController extends Controller
 
             // Tìm cầu thủ dựa trên tên
             $player = Player::join('users', 'players.user_id', '=', 'users.user_id')
-            ->select('players.*', 'users.name as user_name', 'users.email', 'users.date_of_birth', 'users.nationality', 'users.images', 'users.role_id', 'users.created_at as user_created_at', 'users.updated_at as user_updated_at')
+            ->select('players.*', 'users.name as user_name', 'users.email', 'users.date_of_birth', 'users.nationality', 'users.image', 'users.role_id', 'users.created_at as user_created_at', 'users.updated_at as user_updated_at')
             ->where('users.name', $name)
             ->firstOrFail();
 
@@ -118,7 +118,7 @@ class PlayerController extends Controller
                 'email' => $player->user->email,
                 'date_of_birth' => $player->user->date_of_birth,
                 'nationality' => $player->user->nationality,
-                'images' => $player->user->images,
+                'image' => $player->user->image,
                 'goal' => $player->goal,
                 'assist' => $player->assist,
                 'position' => $player->position,

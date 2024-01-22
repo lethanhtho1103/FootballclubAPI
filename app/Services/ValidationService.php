@@ -33,13 +33,13 @@ class ValidationService
         ];
     }
 
-    public function getMatchingValidationRules($request)
+    public function getGameValidationRules($request)
     {
         return [
             'away_club' => 'required|string|max:100',
             'stadium_id' => 'required|exists:stadiums,stadium_id',
-            'match_date' => 'required|date',
-            'match_time' => 'required|date_format:H:i:s',
+            'game_date' => 'required|date',
+            'game_time' => 'required|date_format:H:i:s',
             'goals_scored' => 'integer',
             'goals_conceded' => 'integer',
             'result' => 'string|max:5',
