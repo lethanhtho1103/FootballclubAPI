@@ -11,6 +11,7 @@ use Exception;
 use App\Services\UploadService;
 use App\Services\ValidationService;
 use App\Helpers\UserHelper;
+use App\Http\Resources\PlayerResource;
 
 use App\Models\User;
 use App\Models\Player;
@@ -78,23 +79,9 @@ class PlayerController extends Controller
             $players = Player::with('user:id,user_id,name,email,date_of_birth,nationality,image,role_id,created_at,updated_at')
                 ->get();
 
-            $formattedPlayers = $players->map(function ($player) {
-                return [
-                    'user_id' => $player->user->user_id,
-                    'name' => $player->user->name,
-                    'email' => $player->user->email,
-                    'date_of_birth' => $player->user->date_of_birth,
-                    'nationality' => $player->user->nationality,
-                    'image' => $player->user->image,
-                    'goal' => $player->goal,
-                    'assist' => $player->assist,
-                    'position' => $player->position,
-                    'jersey_number' => $player->jersey_number,
-                    'detail' => $player->detail,
-                ];
-            });
+            $playerResources = PlayerResource::collection($players);
 
-            return response()->json(['players' => $formattedPlayers], 200);
+            return response()->json(['players' => $playerResources], 200);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
@@ -108,25 +95,13 @@ class PlayerController extends Controller
 
             // Tìm cầu thủ dựa trên tên
             $player = Player::join('users', 'players.user_id', '=', 'users.user_id')
-            ->select('players.*', 'users.name as user_name', 'users.email', 'users.date_of_birth', 'users.nationality', 'users.image', 'users.role_id', 'users.created_at as user_created_at', 'users.updated_at as user_updated_at')
+            ->select('players.*', 'users.*')
             ->where('users.name', $name)
             ->firstOrFail();
 
-            $formattedPlayer = [
-                'user_id' => $player->user->user_id,
-                'name' => $player->user->name,
-                'email' => $player->user->email,
-                'date_of_birth' => $player->user->date_of_birth,
-                'nationality' => $player->user->nationality,
-                'image' => $player->user->image,
-                'goal' => $player->goal,
-                'assist' => $player->assist,
-                'position' => $player->position,
-                'jersey_number' => $player->jersey_number,
-                'detail' => $player->detail,
-            ];
+            $playersResource = new PlayerResource($player);
 
-            return response()->json(['player' => $formattedPlayer], 200);
+            return response()->json(['player' => $playersResource], 200);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 404);
         }

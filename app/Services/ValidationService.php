@@ -36,12 +36,12 @@ class ValidationService
     public function getGameValidationRules($request)
     {
         return [
-            'away_club' => 'required|string|max:100',
+            'club_id' => 'required|exists:clubs,club_id',
             'stadium_id' => 'required|exists:stadiums,stadium_id',
             'game_date' => 'required|date',
             'game_time' => 'required|date_format:H:i:s',
-            'goals_scored' => 'integer',
-            'goals_conceded' => 'integer',
+            'goals_scored' => 'integer|min:0',
+            'goals_conceded' => 'integer|min:0',
             'result' => 'string|max:5',
             'state' => 'string|max:100',
             'host' => 'integer',
