@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\CoachController;
-use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\UserController;
 
 
 /*
@@ -43,10 +43,9 @@ Route::group([
     /* For Admin and Staff*/
     Route::group([
         'middleware' => 'check.admin.staff',
-        'prefix' => 'admin'
     ], function () {
-        Route::post('/register-player', [PlayerController::class, 'register']);
-        Route::post('/register-coach', [CoachController::class, 'register']);
+        // Route::post('/players', [PlayerController::class, 'store']);
+        // Route::post('/coaches', [CoachController::class, 'store']);
 
         /* For Admin */
 
@@ -59,7 +58,7 @@ Route::group([
 });
 
 /* For Guest */
-Route::post('/register-user', [CustomerController::class, 'register']);
+Route::post('/register-user', [UserController::class, 'store']);
 
 
 // Players
@@ -69,3 +68,9 @@ Route::get('/players/{slug}', [PlayerController::class, 'show']);
 //Coaches
 Route::get('/coaches', [CoachController::class, 'index']);
 Route::get('/coaches/{slug}', [CoachController::class, 'show']);
+
+
+//Test
+Route::post('/players', [PlayerController::class, 'store']);
+Route::put('/players/{user_id}', [PlayerController::class, 'update']);
+

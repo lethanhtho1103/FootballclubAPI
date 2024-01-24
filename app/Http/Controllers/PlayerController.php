@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+
 use Exception;
 
 use App\Services\UploadService;
@@ -27,7 +29,42 @@ class PlayerController extends Controller
         $this->validationService = $validationService;
     }
 
-    public function register(Request $request)
+    // Get players
+    public function index()
+    {
+        try {
+            $players = Player::with('user:id,user_id,name,email,date_of_birth,nationality,flag,image,role_id,created_at,updated_at')
+                ->paginate(10);
+
+            $playerResources = PlayerResource::collection($players);
+
+            return response()->json(['players' => $playerResources, 'pagination' => $players->toArray()], 200);
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
+    }
+
+    public function show($slug)
+    {
+        try {
+            // Chuyển đổi slug thành tên
+            $name = Str::title(str_replace('-', ' ', $slug));
+
+            // Tìm cầu thủ dựa trên tên
+            $player = Player::join('users', 'players.user_id', '=', 'users.user_id')
+                ->select('players.*', 'users.*')
+                ->where('users.name', $name)
+                ->firstOrFail();
+
+            $playersResource = new PlayerResource($player);
+
+            return response()->json(['player' => $playersResource], 200);
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 404);
+        }
+    }
+
+    public function store(Request $request)
     {
         try {
             // Lấy các quy tắc xác thực từ ValidationService
@@ -41,7 +78,7 @@ class PlayerController extends Controller
             $userID = UserHelper::generateUserID('P');
 
             // Upload ảnh với sự trợ giúp của UploadService
-            $imagePath= $this->uploadService->uploadImage($request, 'user', $userID);
+            $imagePath = $this->uploadService->uploadImage($request, 'user', $userID);
 
             $user = User::create([
                 'user_id' => $userID,
@@ -72,41 +109,64 @@ class PlayerController extends Controller
         }
     }
 
-
-    // Get players
-    public function index()
+    public function update(Request $request, $user_id)
     {
         try {
-            $players = Player::with('user:id,user_id,name,email,date_of_birth,nationality,flag,image,role_id,created_at,updated_at')
-                ->get();
+            // Tìm cầu thủ cần cập nhật
+            $player = Player::where('user_id', $user_id)->first();
 
-            $playerResources = PlayerResource::collection($players);
+            if ($player) {
+                // Lấy các quy tắc xác thực từ ValidationService
+                // $validatedData = $this->validationService->getUserValidationRules($request)
+                //     + $this->validationService->getPlayerValidationRules($request);
 
-            return response()->json(['players' => $playerResources], 200);
+                // // Thực hiện xác thực dữ liệu
+                // $this->validate($request, $validatedData);
+
+                // Tìm người dùng liên quan và cập nhật thông tin người dùng
+                $user = User::where('user_id', $user_id)->first();
+
+                if ($user) {
+                    $user->update($request->only(['name', 'email', 'date_of_birth', 'nationality', 'flag']));
+
+                    // Lấy đường dẫn ảnh cũ để xóa
+                    $oldImage = $user->image;
+
+                    // Kiểm tra và tải lên ảnh người dùng mới nếu có
+                    if ($request->hasFile('image')) {
+                        // Xóa ảnh cũ
+                        if ($oldImage && Storage::exists($oldImage)) {
+                            Storage::delete($oldImage);
+                        }
+
+                        // Tải lên ảnh mới
+                        $userImageURL = $this->uploadService->uploadImage($request, 'user', $user->user_id);
+                        $user->image = $userImageURL;
+                    }
+
+                    // Lưu người dùng cập nhật vào cơ sở dữ liệu
+                    $user->save();
+
+                    // Cập nhật thông tin cầu thủ
+                    $player->fill($request->only(['position', 'jersey_number', 'goal', 'assist', 'detail']));
+
+                    // Lưu cầu thủ cập nhật vào cơ sở dữ liệu
+                    $player->save();
+                }
+
+                // Trả về thông báo thành công và thông tin cầu thủ cập nhật
+                return response()->json(['message' => 'Player updated successfully', 'player' => new PlayerResource($player)], 200);
+            } else {
+                // Trả về thông báo nếu cầu thủ không tồn tại
+                return response()->json(['message' => 'Player not found'], 404);
+            }
+        } catch (ValidationException $e) {
+            // Trả về thông báo lỗi xác thực nếu có lỗi
+            return response()->json(['errors' => $e->errors()], 400);
         } catch (Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 500);
+            // Trả về thông báo lỗi nếu có lỗi khác
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
-    public function show($slug)
-    {
-        try {
-            // Chuyển đổi slug thành tên
-            $name = Str::title(str_replace('-', ' ', $slug));
-
-            // Tìm cầu thủ dựa trên tên
-            $player = Player::join('users', 'players.user_id', '=', 'users.user_id')
-            ->select('players.*', 'users.*')
-            ->where('users.name', $name)
-            ->firstOrFail();
-
-            $playersResource = new PlayerResource($player);
-
-            return response()->json(['player' => $playersResource], 200);
-        } catch (Exception $e) {
-            return response()->json(['message' => $e->getMessage()], 404);
-        }
-    }
-
 
 }

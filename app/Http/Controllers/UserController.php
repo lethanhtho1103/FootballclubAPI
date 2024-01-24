@@ -14,7 +14,7 @@ use App\Services\ValidationService;
 use App\Models\User;
 
 
-class CustomerController extends Controller
+class UserController extends Controller
 {
     private $uploadService;
     private $validationService;
@@ -25,7 +25,7 @@ class CustomerController extends Controller
         $this->validationService = $validationService;
     }
 
-    public function register(Request $request) {
+    public function store(Request $request) {
         try {
             $validatedData = $this->validationService->getUserValidationRules($request);
             $validatedData['confirm_password'] = 'required|string|same:password';
