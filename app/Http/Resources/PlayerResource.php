@@ -20,6 +20,7 @@ class PlayerResource extends JsonResource
             'email' => $this->user->email,
             'date_of_birth' => $this->user->date_of_birth,
             'nationality' => $this->user->nationality,
+            'flag' => $this->user->flag,
             'image' => $this->user->image,
             'goal' => $this->goal,
             'assist' => $this->assist,
