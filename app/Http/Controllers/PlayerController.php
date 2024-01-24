@@ -41,7 +41,7 @@ class PlayerController extends Controller
             $userID = UserHelper::generateUserID('P');
 
             // Upload ảnh với sự trợ giúp của UploadService
-            $imagePath= $this->uploadService->uploadImage($request, $userID);
+            $imagePath= $this->uploadService->uploadImage($request, 'user', $userID);
 
             $user = User::create([
                 'user_id' => $userID,
@@ -50,6 +50,7 @@ class PlayerController extends Controller
                 'password' => Hash::make($request['password']),
                 'date_of_birth' => $request['date_of_birth'],
                 'nationality' => $request['nationality'],
+                'flag' => $request['flag'],
                 'role_id' => 4,
                 'image' => $imagePath,
             ]);
@@ -76,7 +77,7 @@ class PlayerController extends Controller
     public function index()
     {
         try {
-            $players = Player::with('user:id,user_id,name,email,date_of_birth,nationality,image,role_id,created_at,updated_at')
+            $players = Player::with('user:id,user_id,name,email,date_of_birth,nationality,flag,image,role_id,created_at,updated_at')
                 ->get();
 
             $playerResources = PlayerResource::collection($players);

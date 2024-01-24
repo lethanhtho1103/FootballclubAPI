@@ -39,7 +39,7 @@ class CoachController extends Controller
             $userID = UserHelper::generateUserID('C');
 
             // Upload ảnh với sự trợ giúp của UploadService
-            $imagesPath = $this->uploadService->uploadImage($request, $userID);
+            $imagesPath = $this->uploadService->uploadImage($request, 'user', $userID);
 
             $user = User::create([
                 'user_id' => $userID ?? 'C0000000',

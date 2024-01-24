@@ -12,7 +12,8 @@ class ValidationService
             'password' => 'required|string|min:8|max:50',
             'date_of_birth' => 'date',
             'nationality' => 'string|max:50',
-            'images.*' => 'image|mimes:jpeg,png,jpg,webp,PNG,JPG|max:2048',
+            'flag' => 'string|max:10',
+            'image' => 'image|mimes:jpeg,png,jpg,webp,PNG,JPG|max:2048',
         ];
     }
 
@@ -46,6 +47,16 @@ class ValidationService
             'state' => 'string|max:100',
             'host' => 'integer',
             'remaining_seats' => 'integer',
+        ];
+    }
+
+    public function getStadiumValidationRules($request)
+    {
+        return [
+            'name' => 'required|max:100',
+            'address' => 'required|max:255',
+            'image' => 'image|mimes:jpeg,png,jpg,webp,PNG,JPG|max:2048',
+            'capacity' => 'integer|min:0'
         ];
     }
 }

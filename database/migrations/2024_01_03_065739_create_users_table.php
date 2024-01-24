@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('password', 255);
             $table->date('date_of_birth')->nullable();
             $table->string('nationality', 100)->nullable();
+            $table->string('flag', 10)->nullable();
             $table->string('image')->nullable();
             $table->unsignedInteger('role_id')->nullable();
             $table->foreign('role_id')->references('role_id')->on('roles')->onDelete('cascade');;
