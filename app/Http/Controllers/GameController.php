@@ -18,8 +18,6 @@ class GameController extends Controller
         $this->validationService = $validationService;
     }
 
-
-
     public function index()
     {
         try {
@@ -75,7 +73,7 @@ class GameController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function delete($id)
     {
         try {
             $game = Game::findOrFail($id);

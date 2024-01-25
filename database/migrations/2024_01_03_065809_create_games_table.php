@@ -21,7 +21,7 @@ return new class extends Migration
             $table->integer('goals_conceded')->default(0);
             $table->char('result', 5);
             $table->string('state', 100);
-            $table->integer('host')->default(0);
+            $table->integer('host')->default(1);
             $table->integer('remaining_seats')->default(0);
             $table->timestamps();
 

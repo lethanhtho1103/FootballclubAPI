@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -115,7 +116,10 @@ class PlayerController extends Controller
             // Kiểm tra dữ liệu vào
             $this->validate($request, [
                 'name' => 'string|max:255',
-                'email' => 'email|unique:users,email,' . $user_id,
+                'email' => [
+                    'email',
+                    Rule::unique('users', 'email')->ignore($user_id, 'user_id'),
+                ],
                 'date_of_birth' => 'nullable|date',
                 'nationality' => 'nullable|string|max:255',
                 'image' => 'image|mimes:jpeg,png,jpg,webp,PNG,JPG|max:2048',
@@ -185,8 +189,41 @@ class PlayerController extends Controller
         }
     }
 
-    public function delete($user_id){
+    public function delete($user_id)
+    {
+        try {
+            // Tìm cầu thủ cần xóa
+            $player = Player::where('user_id', $user_id)->first();
 
+            if ($player) {
+                // Tìm và xóa người dùng liên quan
+                $user = User::where('user_id', $user_id)->first();
+
+                if ($user) {
+                    $oldImage = $user->image;
+                    if ($oldImage) {
+
+                        $oldImagePath = str_replace('/storage/', 'public/', $oldImage);
+
+                        // Kiểm tra xem ảnh cũ có tồn tại hay không
+                        if (Storage::exists($oldImagePath)) {
+                            Storage::delete($oldImagePath);
+                        }
+                    }
+                    // Xóa người dùng
+                    $user->delete();
+                }
+
+                return response()->json(['message' => 'Player deleted successfully'], 200);
+            } else {
+                // Trả về thông báo nếu cầu thủ không tồn tại
+                return response()->json(['message' => 'Player not found'], 404);
+            }
+        } catch (Exception $e) {
+            // Trả về thông báo lỗi nếu có lỗi khác
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
     }
+
 
 }

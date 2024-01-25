@@ -45,8 +45,15 @@ Route::group([
     Route::group([
         'middleware' => 'check.admin.staff',
     ], function () {
-        // Route::post('/players', [PlayerController::class, 'store']);
-        // Route::post('/coaches', [CoachController::class, 'store']);
+        // Player
+        Route::post('/players', [PlayerController::class, 'store']);
+        Route::put('/players/{user_id}', [PlayerController::class, 'update']);
+        Route::delete('/players/{user_id}', [PlayerController::class, 'delete']);
+
+        // Coaches
+        Route::post('/coaches', [CoachController::class, 'store']);
+        Route::put('/coaches/{user_id}', [CoachController::class, 'update']);
+        Route::delete('/coaches/{user_id}', [CoachController::class, 'delete']);
 
         /* For Admin */
 
@@ -72,10 +79,9 @@ Route::get('/coaches/{slug}', [CoachController::class, 'show']);
 
 
 //Test
-Route::post('/players', [PlayerController::class, 'store']);
-Route::put('/players/{user_id}', [PlayerController::class, 'update']);
+
 
 
 
 //Test function
-Route::put('/test-player/{user_id}',[TestController::class, 'updateImg']);
+// Route::put('/test-player/{user_id}', [TestController::class, 'updateImg']);
