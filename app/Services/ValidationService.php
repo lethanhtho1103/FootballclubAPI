@@ -53,7 +53,7 @@ class ValidationService
     public function getStadiumValidationRules($request)
     {
         return [
-            'name' => 'required|max:100',
+            'name' => 'required|unique:stadiums,name|max:100',
             'address' => 'required|max:255',
             'image' => 'image|mimes:jpeg,png,jpg,webp,PNG,JPG|max:2048',
             'capacity' => 'integer|min:0'

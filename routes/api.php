@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\StadiumController;
 use App\Http\Controllers\TestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -55,6 +56,17 @@ Route::group([
         Route::put('/coaches/{user_id}', [CoachController::class, 'update']);
         Route::delete('/coaches/{user_id}', [CoachController::class, 'delete']);
 
+        // Stadium
+        Route::post('/stadiums', [StadiumController::class, 'store']);
+        Route::put('/stadiums/{id}', [StadiumController::class, 'update']);
+        Route::delete('/stadiums/{id}', [StadiumController::class, 'delete']);
+
+        //Game
+
+        //Game detail
+
+        //Team up
+
         /* For Admin */
 
 
@@ -76,6 +88,13 @@ Route::get('/players/{slug}', [PlayerController::class, 'show']);
 //Coaches
 Route::get('/coaches', [CoachController::class, 'index']);
 Route::get('/coaches/{slug}', [CoachController::class, 'show']);
+
+// Stadium
+Route::get('/stadiums', [StadiumController::class, 'index']);
+Route::get('/stadiums/{id}', [StadiumController::class, 'show']);
+
+//Games
+
 
 
 //Test

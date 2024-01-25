@@ -43,7 +43,7 @@ class UploadService
             case 'club':
                 return "upload/clubs/{$entityID}";
             default:
-                throw new Exception('Invalid entity type');
+                throw new Exception('Invalid entity type 1');
         }
     }
 }
