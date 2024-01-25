@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TestController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -74,3 +75,7 @@ Route::get('/coaches/{slug}', [CoachController::class, 'show']);
 Route::post('/players', [PlayerController::class, 'store']);
 Route::put('/players/{user_id}', [PlayerController::class, 'update']);
 
+
+
+//Test function
+Route::put('/test-player/{user_id}',[TestController::class, 'updateImg']);

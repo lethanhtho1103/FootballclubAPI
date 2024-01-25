@@ -16,6 +16,7 @@ class Player extends Model
         'assist',
         'position',
         'jersey_number',
+        'detail'
     ];
 
     public $incrementing = false; // Sử dụng ID không tự tăng

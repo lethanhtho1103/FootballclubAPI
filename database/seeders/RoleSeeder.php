@@ -22,6 +22,7 @@ class RoleSeeder extends Seeder
             ['role_id' => '2' ,'role_name' => 'staff', 'role_detail' => 'Staff role'],
             ['role_id' => '3' ,'role_name' => 'coach', 'role_detail' => 'Coach role'],
             ['role_id' => '4' ,'role_name' => 'player', 'role_detail' => 'Player role'],
+            ['role_id' => '5' ,'role_name' => 'customer', 'role_detail' => 'Customer role'],
         ];
 
         // Chèn dữ liệu vào bảng

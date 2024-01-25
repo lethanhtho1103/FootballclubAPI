@@ -38,7 +38,8 @@ class UserController extends Controller
                 'user_id' => $userID ?? 'U0000000',
                 'name' => $request['name'],
                 'email' => $request['email'],
-                'password' => Hash::make($request['password'])
+                'password' => Hash::make($request['password']),
+                'role_id' => 5
             ]);
 
             return response()->json(['message' => 'User registered successfully', 'user' => $user]);

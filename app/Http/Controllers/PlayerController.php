@@ -34,11 +34,11 @@ class PlayerController extends Controller
     {
         try {
             $players = Player::with('user:id,user_id,name,email,date_of_birth,nationality,flag,image,role_id,created_at,updated_at')
-                ->paginate(10);
+                ->get();
 
             $playerResources = PlayerResource::collection($players);
 
-            return response()->json(['players' => $playerResources, 'pagination' => $players->toArray()], 200);
+            return response()->json(['players' => $playerResources], 200);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
@@ -112,16 +112,27 @@ class PlayerController extends Controller
     public function update(Request $request, $user_id)
     {
         try {
+            // Kiểm tra dữ liệu vào
+            $this->validate($request, [
+                'name' => 'string|max:255',
+                'email' => 'email|unique:users,email,' . $user_id,
+                'date_of_birth' => 'nullable|date',
+                'nationality' => 'nullable|string|max:255',
+                'image' => 'image|mimes:jpeg,png,jpg,webp,PNG,JPG|max:2048',
+                'flag' => 'nullable|string|max:255',
+                'position' => 'nullable|string|max:255',
+                'jersey_number' => 'nullable|string|max:255',
+                'goal' => 'nullable|integer',
+                'assist' => 'nullable|integer',
+                'detail' => 'nullable|string',
+            ]);
+
             // Tìm cầu thủ cần cập nhật
             $player = Player::where('user_id', $user_id)->first();
 
             if ($player) {
                 // Lấy các quy tắc xác thực từ ValidationService
-                // $validatedData = $this->validationService->getUserValidationRules($request)
-                //     + $this->validationService->getPlayerValidationRules($request);
 
-                // // Thực hiện xác thực dữ liệu
-                // $this->validate($request, $validatedData);
 
                 // Tìm người dùng liên quan và cập nhật thông tin người dùng
                 $user = User::where('user_id', $user_id)->first();
@@ -134,9 +145,14 @@ class PlayerController extends Controller
 
                     // Kiểm tra và tải lên ảnh người dùng mới nếu có
                     if ($request->hasFile('image')) {
-                        // Xóa ảnh cũ
-                        if ($oldImage && Storage::exists($oldImage)) {
-                            Storage::delete($oldImage);
+                        if ($oldImage) {
+
+                            $oldImagePath = str_replace('/storage/', 'public/', $oldImage);
+
+                            // Kiểm tra xem ảnh cũ có tồn tại hay không
+                            if (Storage::exists($oldImagePath)) {
+                                Storage::delete($oldImagePath);
+                            }
                         }
 
                         // Tải lên ảnh mới
@@ -167,6 +183,10 @@ class PlayerController extends Controller
             // Trả về thông báo lỗi nếu có lỗi khác
             return response()->json(['error' => $e->getMessage()], 500);
         }
+    }
+
+    public function delete($user_id){
+
     }
 
 }
