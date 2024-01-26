@@ -125,6 +125,27 @@ class ClubController extends Controller
 
     public function delete($id)
     {
+        try {
+            // Find the club by ID
+            $club = Club::find($id);
 
+            if (!$club) {
+                return response()->json(['message' => 'Club not found'], 404);
+            }
+
+            $directoryToDelete = 'public/upload/clubs/' . $club->club_id;
+
+            // Check if the directory exists
+            if (Storage::exists($directoryToDelete)) {
+                // Delete the directory along with its contents
+                Storage::deleteDirectory($directoryToDelete);
+            }
+            // Delete the club
+            $club->delete();
+
+            return response()->json(['message' => 'Club deleted successfully'], 200);
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
 }

@@ -15,6 +15,7 @@ class ClubResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'club_id' => $this->club_id,
             'name' => $this->name,
             'image' => $this->image
         ];

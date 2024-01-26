@@ -133,6 +133,14 @@ class StadiumController extends Controller
                 return response()->json(['message' => 'Stadium not found'], 404);
             }
 
+            $directoryToDelete = 'public/upload/stadiums/' . $stadium->stadium_id;
+
+            // Check if the directory exists
+            if (Storage::exists($directoryToDelete)) {
+                // Delete the directory along with its contents
+                Storage::deleteDirectory($directoryToDelete);
+            }
+
             // Delete the stadium
             $stadium->delete();
 
