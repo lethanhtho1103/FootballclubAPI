@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('flag', 10)->nullable();
             $table->string('image')->nullable();
             $table->unsignedInteger('role_id')->nullable();
-            $table->foreign('role_id')->references('role_id')->on('roles')->onDelete('set 5');;
+            $table->foreign('role_id')->references('role_id')->on('roles')->onDelete('set null');;
             $table->timestamps();
         });
     }

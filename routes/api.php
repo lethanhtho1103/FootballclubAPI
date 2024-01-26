@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ClubController;
 use App\Http\Controllers\StadiumController;
 use App\Http\Controllers\TestController;
 use Illuminate\Http\Request;
@@ -88,6 +89,15 @@ Route::get('/players/{slug}', [PlayerController::class, 'show']);
 //Coaches
 Route::get('/coaches', [CoachController::class, 'index']);
 Route::get('/coaches/{slug}', [CoachController::class, 'show']);
+
+
+// Club
+Route::get('/clubs', [ClubController::class, 'index']);
+Route::get('/clubs/{id}', [ClubController::class, 'show']);
+Route::post('/clubs', [ClubController::class, 'store']);
+Route::put('/clubs/{id}', [ClubController::class, 'update']);
+Route::post('/clubs/{id}', [ClubController::class, 'delete']);
+
 
 // Stadium
 Route::get('/stadiums', [StadiumController::class, 'index']);

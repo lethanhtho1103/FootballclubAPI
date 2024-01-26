@@ -10,7 +10,7 @@ class Club extends Model
 
     protected $fillable = [
         'name',
-        'logo',
+        'image',
     ];
 
     // Relationships

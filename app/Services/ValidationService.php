@@ -59,4 +59,11 @@ class ValidationService
             'capacity' => 'integer|min:0'
         ];
     }
+
+    public function getClubValidationRules($request){
+        return [
+            'name' => 'required|unique:clubs,name|max:100',
+            'image' => 'image|mimes:jpeg,png,jpg,webp,PNG,JPG|max:2048',
+        ];
+    }
 }
