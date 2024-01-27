@@ -43,6 +43,33 @@ class GameController extends Controller
         }
     }
 
+    public function matchLive()
+    {
+        $liveMatches = Game::with('club', 'stadium', 'gameDetail')
+            ->where('state', 'in_progress')
+            ->get();
+
+        return response()->json(['live_matches' => new GameResource($liveMatches)], 200);
+    }
+
+    public function matchHistory()
+    {
+        $historyMatches = Game::with('club', 'stadium', 'gameDetail')
+            ->where('state', 'completed')
+            ->get();
+
+        return response()->json(['history_matches' => new GameResource($historyMatches)], 200);
+    }
+
+    public function matchComeUp()
+    {
+        $upcomingMatches = Game::with('club', 'stadium', 'gameDetail')
+            ->whereIn('state', 'comeup')
+            ->get();
+
+        return response()->json(['upcoming_matches' => new GameResource($upcomingMatches)], 200);
+    }
+
     public function store(Request $request)
     {
         try {
@@ -59,9 +86,11 @@ class GameController extends Controller
 
             // Tạo mới trận đấu
             $game = Game::create($request->all());
-            $games = Game::with('club', 'stadium', 'gameDetail')->where('game_id', $game->game_id)->get();
+            $game->load('club', 'stadium', 'gameDetail');
 
-            return new GameResource($game);
+            $gameResource = new GameResource($game);
+
+            return response()->json(['game' => $gameResource], 200);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
@@ -72,11 +101,20 @@ class GameController extends Controller
         try {
             $request->validate($this->validationService->getGameValidationRules($request));
 
+            $existingGame = Game::where('game_date', $request->input('game_date'))
+                ->where('game_time', $request->input('game_time'))
+                ->first();
+
+            if ($existingGame) {
+                return response()->json(['message' => 'There is already a game at this date and time.'], 400);
+            }
+
             // Cập nhật thông tin trận đấu
             $game = Game::findOrFail($id);
             $game->update($request->all());
 
-            return new GameResource($game);
+            $gameResource = new GameResource($game);
+            return response()->json(['game' => $gameResource], 200);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
