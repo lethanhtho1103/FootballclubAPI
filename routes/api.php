@@ -106,9 +106,9 @@ Route::get('/stadiums/{id}', [StadiumController::class, 'show']);
 
 //Games
 Route::get('/matches', [GameController::class, 'index']);
-Route::get('/match-live', [GameController::class, 'mathLive']);
-Route::get('/match-history', [GameController::class, 'mathHistory']);
-Route::get('/match-comeup', [GameController::class, 'mathComeUp']);
+Route::get('/match-live', [GameController::class, 'matchLive']);
+Route::get('/match-history', [GameController::class, 'matchHistory']);
+Route::get('/match-comeup', [GameController::class, 'matchComeUp']);
 Route::get('/matches/{id}', [GameController::class, 'show']);
 
 Route::post('/matches',[GameController::class, 'store']);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Exception;
 
@@ -45,29 +46,47 @@ class GameController extends Controller
 
     public function matchLive()
     {
-        $liveMatches = Game::with('club', 'stadium', 'gameDetail')
-            ->where('state', 'in_progress')
-            ->get();
+        try {
+            $liveMatches = Game::with('club', 'stadium', 'gameDetail')
+                ->where('state', 'in_progress')
+                ->get();
 
-        return response()->json(['live_matches' => new GameResource($liveMatches)], 200);
+            return response()->json(['live_matches' => GameResource::collection($liveMatches)], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'No live matches found.'], 404);
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
 
     public function matchHistory()
     {
-        $historyMatches = Game::with('club', 'stadium', 'gameDetail')
-            ->where('state', 'completed')
-            ->get();
+        try {
+            $historyMatches = Game::with('club', 'stadium', 'gameDetail')
+                ->where('state', 'completed')
+                ->get();
 
-        return response()->json(['history_matches' => new GameResource($historyMatches)], 200);
+            return response()->json(['history_matches' => GameResource::collection($historyMatches)], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'No completed matches found.'], 404);
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
 
     public function matchComeUp()
     {
-        $upcomingMatches = Game::with('club', 'stadium', 'gameDetail')
-            ->whereIn('state', 'comeup')
-            ->get();
+        try {
+            $upcomingMatches = Game::with('club', 'stadium', 'gameDetail')
+                ->whereIn('state', ['coming_up', 'pending'])
+                ->get();
 
-        return response()->json(['upcoming_matches' => new GameResource($upcomingMatches)], 200);
+            return response()->json(['upcoming_matches' => GameResource::collection($upcomingMatches)], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'No upcoming matches found.'], 404);
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 500);
+        }
     }
 
     public function store(Request $request)
