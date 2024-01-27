@@ -21,7 +21,7 @@ class GameController extends Controller
     public function index()
     {
         try {
-            $games = Game::with('club', 'stadium', 'gameDetails')->get();
+            $games = Game::with('club', 'stadium', 'gameDetail')->get();
             $gameResources = GameResource::collection($games);
 
             return response()->json(['games' => $gameResources], 200);
@@ -30,11 +30,10 @@ class GameController extends Controller
         }
     }
 
-
     public function show($id)
     {
         try {
-            $game = Game::with('club', 'stadium', 'gameDetails')->findOrFail($id);
+            $game = Game::with('club', 'stadium', 'gameDetail')->findOrFail($id);
             $gameResource = new GameResource($game);
 
             return response()->json(['games' => $gameResource], 200);
@@ -49,8 +48,18 @@ class GameController extends Controller
         try {
             $request->validate($this->validationService->getGameValidationRules($request));
 
+            // Kiểm tra xem có trận đấu nào bị trùng ngày và giờ hay không
+            $existingGame = Game::where('game_date', $request->input('game_date'))
+                ->where('game_time', $request->input('game_time'))
+                ->first();
+
+            if ($existingGame) {
+                return response()->json(['message' => 'There is already a game at this date and time.'], 400);
+            }
+
             // Tạo mới trận đấu
             $game = Game::create($request->all());
+            $games = Game::with('club', 'stadium', 'gameDetail')->where('game_id', $game->game_id)->get();
 
             return new GameResource($game);
         } catch (Exception $e) {

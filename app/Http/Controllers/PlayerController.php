@@ -200,15 +200,12 @@ class PlayerController extends Controller
                 $user = User::where('user_id', $user_id)->first();
 
                 if ($user) {
-                    $oldImage = $user->image;
-                    if ($oldImage) {
+                    $directoryToDelete = 'public/upload/clubs/' . $user->user_id;
 
-                        $oldImagePath = str_replace('/storage/', 'public/', $oldImage);
-
-                        // Kiểm tra xem ảnh cũ có tồn tại hay không
-                        if (Storage::exists($oldImagePath)) {
-                            Storage::delete($oldImagePath);
-                        }
+                    // Check if the directory exists
+                    if (Storage::exists($directoryToDelete)) {
+                        // Delete the directory along with its contents
+                        Storage::deleteDirectory($directoryToDelete);
                     }
                     // Xóa người dùng
                     $user->delete();

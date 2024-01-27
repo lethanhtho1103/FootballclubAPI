@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ClubController;
+use App\Http\Controllers\GameController;
 use App\Http\Controllers\StadiumController;
 use App\Http\Controllers\TestController;
 use Illuminate\Http\Request;
@@ -104,6 +105,19 @@ Route::get('/stadiums', [StadiumController::class, 'index']);
 Route::get('/stadiums/{id}', [StadiumController::class, 'show']);
 
 //Games
+Route::get('/matches', [GameController::class, 'index']);
+Route::get('/match-live', [GameController::class, 'mathLive']);
+Route::get('/match-history', [GameController::class, 'mathHistory']);
+Route::get('/match-comeup', [GameController::class, 'mathComeUp']);
+Route::get('/matches/{id}', [GameController::class, 'show']);
+
+Route::post('/matches',[GameController::class, 'store']);
+Route::put('/matches/{id}',[GameController::class, 'update']);
+Route::delete('/matches/{id}',[GameController::class, 'delete']);
+
+// Contract
+
+
 
 
 

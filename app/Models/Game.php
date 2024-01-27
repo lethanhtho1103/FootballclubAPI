@@ -27,7 +27,12 @@ class Game extends Model
         return $this->belongsTo(Club::class, 'club_id', 'club_id');
     }
 
-    public function gameDetails()
+    public function stadium()
+    {
+        return $this->belongsTo(Stadium::class, 'stadium_id', 'stadium_id');
+    }
+
+    public function gameDetail()
     {
         return $this->hasMany(GameDetail::class, 'game_id', 'game_id');
     }

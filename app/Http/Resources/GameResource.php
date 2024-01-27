@@ -26,6 +26,7 @@ class GameResource extends JsonResource
             'state' => $this->state,
             'host' => $this->host,
             'remaining_seats' => $this->remaining_seats,
+            'game_detail' => $this->gameDetail
         ];
     }
 }

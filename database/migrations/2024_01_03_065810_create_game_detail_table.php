@@ -18,7 +18,7 @@ return new class extends Migration
             $table->integer('jersey_number');
             $table->boolean('is_away')->default(0);
             $table->string('type', 100);
-            $table->timestamp('time')->useCurrent();
+            $table->string('time', 10);
 
             $table->foreign('user_id')->references('user_id')->on('users')->onDelete('set null')->nullable();
             $table->foreign('game_id')->references('game_id')->on('games')->onDelete('cascade');
