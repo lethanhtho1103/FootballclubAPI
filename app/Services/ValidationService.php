@@ -60,10 +60,24 @@ class ValidationService
         ];
     }
 
-    public function getClubValidationRules($request){
+    public function getClubValidationRules($request)
+    {
         return [
             'name' => 'required|unique:clubs,name|max:100',
             'image' => 'image|mimes:jpeg,png,jpg,webp,PNG,JPG|max:2048',
+        ];
+    }
+
+    public function getGameDetailValidationRules($request)
+    {
+        return [
+            'game_id' => 'required|exists:games,game_id',
+            'user_id' => 'nullable|exists:users,user_id',
+            'player_name' => 'required|string|max:50',
+            'jersey_number' => 'required|integer|min:1|max:99',
+            'is_away' => 'required|boolean',
+            'type' => 'required|string|max:100',
+            'time' => 'required|string|max:10',
         ];
     }
 }

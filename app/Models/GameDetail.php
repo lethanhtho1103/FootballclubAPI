@@ -9,6 +9,7 @@ class GameDetail extends Model
 
     protected $table = 'game_detail';
 
+    protected $primaryKey = 'game_detail_id';
 
     protected $fillable = [
         'game_id',
@@ -19,6 +20,8 @@ class GameDetail extends Model
         'type',
         'time',
     ];
+
+    public $timestamps = false; // Không sử dụng timestamps
 
     public function game()
     {

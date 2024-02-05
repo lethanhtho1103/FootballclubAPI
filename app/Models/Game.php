@@ -21,6 +21,8 @@ class Game extends Model
         'remaining_seats',
     ];
 
+    public $timestamps = false; // Không sử dụng timestamps
+
     // Relationships
     public function club()
     {

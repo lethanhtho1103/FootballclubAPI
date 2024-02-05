@@ -25,6 +25,8 @@ class Stadium extends Model
         'updated_at',
     ];
 
+    public $timestamps = false; // Không sử dụng timestamps
+
     public function games()
     {
         return $this->hasMany(Game::class, 'stadium_id', 'stadium_id');

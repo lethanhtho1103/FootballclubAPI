@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ClubController;
 use App\Http\Controllers\GameController;
+use App\Http\Controllers\GameDetailController;
 use App\Http\Controllers\StadiumController;
 use App\Http\Controllers\TestController;
 use Illuminate\Http\Request;
@@ -48,20 +49,20 @@ Route::group([
     Route::group([
         'middleware' => 'check.admin.staff',
     ], function () {
-        // Player
-        Route::post('/players', [PlayerController::class, 'store']);
-        Route::put('/players/{user_id}', [PlayerController::class, 'update']);
-        Route::delete('/players/{user_id}', [PlayerController::class, 'delete']);
+        // // Player
+        // Route::post('/players', [PlayerController::class, 'store']);
+        // Route::put('/players/{user_id}', [PlayerController::class, 'update']);
+        // Route::delete('/players/{user_id}', [PlayerController::class, 'delete']);
 
-        // Coaches
-        Route::post('/coaches', [CoachController::class, 'store']);
-        Route::put('/coaches/{user_id}', [CoachController::class, 'update']);
-        Route::delete('/coaches/{user_id}', [CoachController::class, 'delete']);
+        // // Coaches
+        // Route::post('/coaches', [CoachController::class, 'store']);
+        // Route::put('/coaches/{user_id}', [CoachController::class, 'update']);
+        // Route::delete('/coaches/{user_id}', [CoachController::class, 'delete']);
 
-        // Stadium
-        Route::post('/stadiums', [StadiumController::class, 'store']);
-        Route::put('/stadiums/{id}', [StadiumController::class, 'update']);
-        Route::delete('/stadiums/{id}', [StadiumController::class, 'delete']);
+        // // Stadium
+        // Route::post('/stadiums', [StadiumController::class, 'store']);
+        // Route::put('/stadiums/{id}', [StadiumController::class, 'update']);
+        // Route::delete('/stadiums/{id}', [StadiumController::class, 'delete']);
 
         //Game
 
@@ -100,6 +101,21 @@ Route::put('/clubs/{id}', [ClubController::class, 'update']);
 Route::delete('/clubs/{id}', [ClubController::class, 'delete']);
 
 
+// Player
+Route::post('/players', [PlayerController::class, 'store']);
+Route::put('/players/{user_id}', [PlayerController::class, 'update']);
+Route::delete('/players/{user_id}', [PlayerController::class, 'delete']);
+
+// Coaches
+Route::post('/coaches', [CoachController::class, 'store']);
+Route::put('/coaches/{user_id}', [CoachController::class, 'update']);
+Route::delete('/coaches/{user_id}', [CoachController::class, 'delete']);
+
+// Stadium
+Route::post('/stadiums', [StadiumController::class, 'store']);
+Route::put('/stadiums/{id}', [StadiumController::class, 'update']);
+Route::delete('/stadiums/{id}', [StadiumController::class, 'delete']);
+
 // Stadium
 Route::get('/stadiums', [StadiumController::class, 'index']);
 Route::get('/stadiums/{id}', [StadiumController::class, 'show']);
@@ -114,6 +130,13 @@ Route::get('/matches/{id}', [GameController::class, 'show']);
 Route::post('/matches',[GameController::class, 'store']);
 Route::put('/matches/{id}',[GameController::class, 'update']);
 Route::delete('/matches/{id}',[GameController::class, 'delete']);
+
+
+// Game detail
+Route::post('/match-detail',[GameDetailController::class, 'store']);
+Route::put('/match-detail/{id}',[GameDetailController::class, 'update']);
+Route::delete('/match-detail/{id}',[GameDetailController::class, 'delete']);
+
 
 // Contract
 

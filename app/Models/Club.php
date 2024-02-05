@@ -15,6 +15,8 @@ class Club extends Model
         'image',
     ];
 
+    public $timestamps = false; // Không sử dụng timestamps
+
     // Relationships
     public function games()
     {

@@ -70,7 +70,7 @@ class ClubController extends Controller
             // Save the club to the database
             $club->save();
 
-            return response()->json(['club' => new ClubResource($club)], 201);
+            return response()->json(['message' => 'Club created successfully', 'club' => new ClubResource($club)], 201);
 
         } catch (ValidationException $e) {
             return response()->json(['errors' => $e->errors()], 400);

@@ -66,7 +66,7 @@ class StadiumController extends Controller
             $stadium->image = $imagePath;
             $stadium->save();
             // Upload image
-            return response()->json(['stadium' => new StadiumResource($stadium)], 201);
+            return response()->json(['message' => 'Stadium created successfully', 'stadium' => new StadiumResource($stadium)], 201);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }

@@ -25,7 +25,7 @@ class GameController extends Controller
             $games = Game::with('club', 'stadium', 'gameDetail')->get();
             $gameResources = GameResource::collection($games);
 
-            return response()->json(['games' => $gameResources], 200);
+            return response()->json(['matches' => $gameResources], 200);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
@@ -37,7 +37,7 @@ class GameController extends Controller
             $game = Game::with('club', 'stadium', 'gameDetail')->findOrFail($id);
             $gameResource = new GameResource($game);
 
-            return response()->json(['games' => $gameResource], 200);
+            return response()->json(['match' => $gameResource], 200);
 
         } catch (Exception $e) {
             return response()->json(['message' => 'The match does not exist.'], 404);
@@ -109,7 +109,7 @@ class GameController extends Controller
 
             $gameResource = new GameResource($game);
 
-            return response()->json(['game' => $gameResource], 200);
+            return response()->json(['match' => $gameResource], 200);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
@@ -133,7 +133,7 @@ class GameController extends Controller
             $game->update($request->all());
 
             $gameResource = new GameResource($game);
-            return response()->json(['game' => $gameResource], 200);
+            return response()->json(['match' => $gameResource], 200);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 400);
         }
