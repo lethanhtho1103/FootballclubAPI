@@ -33,6 +33,31 @@ class UploadService
         return Storage::url($imagePath);
     }
 
+    public function uploadPDF($request, $entityType, $entityID)
+    {
+        $pdfPath = '';
+
+        if ($request->hasFile('pdf')) {
+            $pdf = $request->file('pdf');
+
+            if ($pdf->isValid()) {
+                $pdfName = time() . Str::random(10) . '.' . $pdf->getClientOriginalExtension();
+
+                $uploadPath = $this->getUploadPath($entityType, $entityID);
+
+                $pdfPath = $pdf->storeAs($uploadPath, $pdfName, 'public');
+
+                if (!$pdfPath) {
+                    throw new Exception('Failed to store PDF');
+                }
+            } else {
+                throw new Exception('Invalid PDF file');
+            }
+        }
+
+        return Storage::url($pdfPath);
+    }
+
     private function getUploadPath($entityType, $entityID)
     {
         switch ($entityType) {
@@ -42,6 +67,8 @@ class UploadService
                 return "upload/stadiums/{$entityID}";
             case 'club':
                 return "upload/clubs/{$entityID}";
+            case 'contract':
+                return "upload/contracts";
             default:
                 throw new Exception('Invalid entity type 1');
         }

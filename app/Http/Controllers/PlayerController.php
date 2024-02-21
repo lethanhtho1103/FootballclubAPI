@@ -18,6 +18,7 @@ use App\Http\Resources\PlayerResource;
 
 use App\Models\User;
 use App\Models\Player;
+use App\Models\TeamLineup;
 
 class PlayerController extends Controller
 {
@@ -62,6 +63,32 @@ class PlayerController extends Controller
             return response()->json(['player' => $playersResource], 200);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 404);
+        }
+    }
+
+    // Lấy player chưa có trong đội hình
+    public function player_up($game_id){
+        try {
+            $selectedPlayers = TeamLineup::where('game_id', $game_id)
+            ->pluck('user_id')
+            ->toArray();
+
+            $allPlayers = Player::all()->pluck('user_id')->toArray();
+
+            // Lọc ra các cầu thủ chưa được chọn
+            $availablePlayers = array_diff($allPlayers, $selectedPlayers);
+
+            $players = Player::join('users', 'players.user_id', '=', 'users.user_id')
+                ->select('players.*', 'users.*')
+                ->whereIn('user_id', $availablePlayers)
+                ->get();
+
+            // Lấy thông tin chi tiết của các cầu thủ chưa được chọn
+            $players = PlayerResource::collection($players);
+
+            return response()->json(['players' => $players], 200);
+        } catch (Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 

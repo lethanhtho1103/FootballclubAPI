@@ -38,4 +38,9 @@ class Game extends Model
     {
         return $this->hasMany(GameDetail::class, 'game_id', 'game_id');
     }
+
+    public function team_lineup()
+    {
+        return $this->hasMany(TeamLineup::class, 'game_id', 'game_id');
+    }
 }

@@ -19,14 +19,14 @@ class ManCitySeeder extends Seeder
     {
         // Dữ liệu cầu thủ Manchester City
         $manCityPlayers = [
-            // [
-            //     'name' => 'Kevin De Bruyne',
-            //     'email' => 'debruyne@example.com',
-            //     'date_of_birth' => '1991-06-28',
-            //     'nationality' => 'Belgium',
-            //     'position' => 'Midfielder',
-            //     'jersey_number' => 17,
-            // ],
+            [
+                'name' => 'Kevin De Bruyne',
+                'email' => 'debruyne@example.com',
+                'date_of_birth' => '1991-06-28',
+                'nationality' => 'Belgium',
+                'position' => 'Midfielder',
+                'jersey_number' => 17,
+            ],
             [
                 'name' => 'Phil Foden',
                 'email' => 'foden@example.com',

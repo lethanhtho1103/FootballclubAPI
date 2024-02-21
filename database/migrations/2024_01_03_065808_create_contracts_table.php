@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('contracts', function (Blueprint $table) {
             $table->increments('contract_id');
             $table->string('user_id', 10);
+            $table->string('type')->nullable();
             $table->date('date_created');
             $table->date('expiration_date');
             $table->decimal('salary', 10, 2);

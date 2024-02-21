@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ClubController;
+use App\Http\Controllers\ContractController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\GameDetailController;
 use App\Http\Controllers\StadiumController;
@@ -139,7 +140,12 @@ Route::delete('/match-detail/{id}',[GameDetailController::class, 'delete']);
 
 
 // Contract
-
+Route::get('/contracts',[ContractController::class, 'index']);
+Route::get('/contracts/{id}',[ContractController::class, 'show']);
+Route::get('contracts/type/{type}', [ContractController::class, 'getByType']);
+Route::post('/contracts',[ContractController::class, 'store']);
+Route::put('/contracts/{id}',[ContractController::class, 'update']);
+Route::delete('/contracts/{id}',[ContractController::class, 'delete']);
 
 
 

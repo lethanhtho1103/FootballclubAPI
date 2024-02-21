@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use Illuminate\Validation\Rule;
+
+
 class ValidationService
 {
     public function getUserValidationRules($request)
@@ -80,4 +83,17 @@ class ValidationService
             'time' => 'required|string|max:10',
         ];
     }
+
+    public function getContractValidationRules($request)
+    {
+        return [
+            'user_id' => 'required|exists:users,user_id',
+            'date_created' => 'required|date',
+            'expiration_date' => 'required|date|after_or_equal:date_created',
+            'salary' => 'required|numeric|min:0',
+            'pdf' => 'required|file|mimes:pdf|max:10240',
+            'type' => ['required', Rule::in(['advertisement', 'individual', 'sponsorship', 'rental'])], // Thêm quy tắc cho trường "type"
+        ];
+    }
+
 }
