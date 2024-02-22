@@ -27,6 +27,7 @@ class PlayerResource extends JsonResource
             'position' => $this->position,
             'jersey_number' => $this->jersey_number,
             'detail' => $this->detail,
+            'contract' => $this->contract,
         ];
     }
 }

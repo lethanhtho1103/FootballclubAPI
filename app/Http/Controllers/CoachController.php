@@ -33,7 +33,7 @@ class CoachController extends Controller
     public function index()
     {
         try {
-            $coaches = Coach::with('user:id,user_id,name,email,date_of_birth,nationality,image,role_id,created_at,updated_at')
+            $coaches = Coach::with('user', 'contract')
                 ->get();
 
             $coacheResources = CoachResource::collection($coaches);

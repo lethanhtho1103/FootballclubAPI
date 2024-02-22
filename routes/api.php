@@ -147,7 +147,10 @@ Route::post('/contracts',[ContractController::class, 'store']);
 Route::put('/contracts/{id}',[ContractController::class, 'update']);
 Route::delete('/contracts/{id}',[ContractController::class, 'delete']);
 
+// User
 
+Route::get('/users', [UserController::class, 'index']);
+Route::get('/users/{id}', [UserController::class, 'show']);
 
 
 //Test

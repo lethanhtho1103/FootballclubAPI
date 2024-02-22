@@ -25,6 +25,7 @@ class CoachResource extends JsonResource
             'wins' => $this->wins,
             'losses' => $this->losses,
             'draws' => $this->draws,
+            'contract' => $this->contract
         ];
     }
 }

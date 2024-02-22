@@ -35,7 +35,7 @@ class PlayerController extends Controller
     public function index()
     {
         try {
-            $players = Player::with('user:id,user_id,name,email,date_of_birth,nationality,flag,image,role_id,created_at,updated_at')
+            $players = Player::with('user', 'contract')
                 ->get();
 
             $playerResources = PlayerResource::collection($players);
@@ -56,6 +56,7 @@ class PlayerController extends Controller
             $player = Player::join('users', 'players.user_id', '=', 'users.user_id')
                 ->select('players.*', 'users.*')
                 ->where('users.name', $name)
+                // ->with('contract')
                 ->firstOrFail();
 
             $playersResource = new PlayerResource($player);
@@ -227,7 +228,7 @@ class PlayerController extends Controller
                 $user = User::where('user_id', $user_id)->first();
 
                 if ($user) {
-                    $directoryToDelete = 'public/upload/clubs/' . $user->user_id;
+                    $directoryToDelete = 'public/upload/users/' . $user->user_id;
 
                     // Check if the directory exists
                     if (Storage::exists($directoryToDelete)) {
