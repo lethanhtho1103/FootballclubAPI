@@ -37,22 +37,6 @@ class ValidationService
         ];
     }
 
-    public function getGameValidationRules($request)
-    {
-        return [
-            'club_id' => 'required|exists:clubs,club_id',
-            'stadium_id' => 'required|exists:stadiums,stadium_id',
-            'game_date' => 'required|date',
-            'game_time' => 'required|date_format:H:i:s',
-            'goals_scored' => 'integer|min:0',
-            'goals_conceded' => 'integer|min:0',
-            'result' => 'string|max:5',
-            'state' => 'string|max:100',
-            'host' => 'integer',
-            'remaining_seats' => 'integer',
-        ];
-    }
-
     public function getStadiumValidationRules($request)
     {
         return [
@@ -68,6 +52,22 @@ class ValidationService
         return [
             'name' => 'required|unique:clubs,name|max:100',
             'image' => 'image|mimes:jpeg,png,jpg,webp,PNG,JPG|max:2048',
+        ];
+    }
+
+    public function getGameValidationRules($request)
+    {
+        return [
+            'club_id' => 'required|exists:clubs,club_id',
+            'stadium_id' => 'required|exists:stadiums,stadium_id',
+            'game_date' => 'required|date',
+            'game_time' => 'required|date_format:H:i:s',
+            'goals_scored' => 'integer|min:0',
+            'goals_conceded' => 'integer|min:0',
+            'result' => 'string|max:5',
+            'state' => 'string|max:100',
+            'host' => 'integer',
+            'remaining_seats' => 'integer',
         ];
     }
 
