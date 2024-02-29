@@ -104,7 +104,7 @@ Route::delete('/clubs/{id}', [ClubController::class, 'delete']);
 // Players
 Route::get('/players', [PlayerController::class, 'index']);
 Route::get('/players/{slug}', [PlayerController::class, 'show']);
-Route::get('/players/{user_id}', [PlayerController::class, 'showId']);
+Route::get('/players/Id/{user_id}', [PlayerController::class, 'showId']);
 Route::post('/players', [PlayerController::class, 'store']);
 Route::patch('/players/{user_id}', [PlayerController::class, 'update']);
 Route::delete('/players/{user_id}', [PlayerController::class, 'delete']);
