@@ -67,6 +67,24 @@ class PlayerController extends Controller
         }
     }
 
+    public function showId($user_id)
+    {
+        try {
+            // Tìm cầu thủ dựa trên tên
+            $player = Player::join('users', 'players.user_id', '=', 'users.user_id')
+                ->select('players.*', 'users.*')
+                ->where('users.user_id', $user_id)
+                // ->with('contract')
+                ->firstOrFail();
+
+            $playersResource = new PlayerResource($player);
+
+            return response()->json(['player' => $playersResource], 200);
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 404);
+        }
+    }
+
     // Lấy player chưa có trong đội hình
     public function player_up($game_id){
         try {

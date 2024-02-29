@@ -24,7 +24,16 @@ class GameDetailController extends Controller
         try {
             $request->validate($this->validationService->getGameDetailValidationRules($request));
 
-            $gameDetail = GameDetail::create($request->all());
+            $gameDetail = GameDetail::create([
+                'game_id' => $request->game_id,
+                'user_id' => $request->user_id,
+                'player_name' => $request->player_name,
+                'jersey_number' => $request->jersey_number,
+                'is_away' => $request->is_away,
+                'type' => $request->type,
+                'time' => $request->time,
+            ]);
+
             // $gameDetail->load('game');
 
             $gameDetailResource = $gameDetail;
@@ -41,10 +50,17 @@ class GameDetailController extends Controller
             $request->validate($this->validationService->getGameDetailValidationRules($request));
 
             $gameDetail = GameDetail::findOrFail($id);
-            $gameDetail->update($request->all());
+
             // $gameDetail->load('game');
-
-
+            $gameDetail->update([
+                'game_id' => $request->game_id,
+                'user_id' => $request->user_id,
+                'player_name' => $request->player_name,
+                'jersey_number' => $request->jersey_number,
+                'is_away' => $request->is_away,
+                'type' => $request->type,
+                'time' => $request->time,
+            ]);
 
             return response()->json(['message' => 'Game detail updated successfully'], 200);
         } catch (ModelNotFoundException $e) {
