@@ -13,7 +13,10 @@ class ValidationService
             'name' => 'required|string|max:50',
             'email' => 'required|email|unique:users,Email',
             'password' => 'required|string|min:8|max:50',
-            'date_of_birth' => 'date',
+            'date_of_birth' => [
+                'date',
+                'before_or_equal:' . now()->format('Y-m-d'),
+            ],
             'nationality' => 'string|max:50',
             'flag' => 'string|max:10',
             'image' => 'image|mimes:jpeg,png,jpg,webp,PNG,JPG|max:2048',
@@ -33,7 +36,12 @@ class ValidationService
     {
         return [
             'position' => 'string|max:50',
-            'jersey_number' => 'integer|min:1|max:99',
+            'jersey_number' => [
+                'integer',
+                'min:1',
+                'max:99',
+                'unique'
+            ],
         ];
     }
 
