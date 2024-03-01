@@ -124,15 +124,16 @@ class PlayerController extends Controller
             // Tạo user ID độc nhất cho HLV
             $userID = UserHelper::generateUserID('P');
 
-            // Upload ảnh với sự trợ giúp của UploadService
-            // if($request->hasFile('image')){
-            //     $imagePath = $this->uploadService->uploadImage($request, 'user', $userID);
-            // }
-            // else{
-            //     $imagePath = null;
-            // }
 
-            $imagePath = $request->hasFile('image') ? $this->uploadService->uploadImage($request, 'user', $userID) : null;
+            // Upload ảnh với sự trợ giúp của UploadService
+            if($request->hasFile('image')){
+                $imagePath = $this->uploadService->uploadImage($request, 'user', $userID);
+            }
+            else{
+                $imagePath = null;
+            }
+
+            // $imagePath = $request->hasFile('image') ? $this->uploadService->uploadImage($request, 'user', $userID) : null;
 
             $user = User::create([
                 'user_id' => $userID,
