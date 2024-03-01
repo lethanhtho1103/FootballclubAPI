@@ -51,9 +51,9 @@ Route::group([
         'middleware' => 'check.admin.staff',
     ], function () {
         // // Player
-        // Route::post('/players', [PlayerController::class, 'store']);
-        // Route::post('/players/{user_id}', [PlayerController::class, 'update']);
-        // Route::delete('/players/{user_id}', [PlayerController::class, 'delete']);
+        Route::post('/players', [PlayerController::class, 'store']);
+        Route::post('/players/{user_id}', [PlayerController::class, 'update']);
+        Route::delete('/players/{user_id}', [PlayerController::class, 'delete']);
 
         // // Coaches
         // Route::post('/coaches', [CoachController::class, 'store']);
@@ -93,14 +93,11 @@ Route::post('/clubs/{id}', [ClubController::class, 'update']);
 Route::delete('/clubs/{id}', [ClubController::class, 'delete']);
 
 
-// Player
 // Players
 Route::get('/players', [PlayerController::class, 'index']);
 Route::get('/players/{slug}', [PlayerController::class, 'show']);
 Route::get('/players/id/{user_id}', [PlayerController::class, 'showId']);
-Route::post('/players', [PlayerController::class, 'store']);
-Route::post('/players/{user_id}', [PlayerController::class, 'update']);
-Route::delete('/players/{user_id}', [PlayerController::class, 'delete']);
+
 
 // Coaches
 Route::get('/coaches', [CoachController::class, 'index']);
@@ -124,24 +121,24 @@ Route::get('/match-history', [GameController::class, 'matchHistory']);
 Route::get('/match-comeup', [GameController::class, 'matchComeUp']);
 Route::get('/matches/{id}', [GameController::class, 'show']);
 
-Route::post('/matches',[GameController::class, 'store']);
-Route::post('/matches/{id}',[GameController::class, 'update']);
-Route::delete('/matches/{id}',[GameController::class, 'delete']);
+Route::post('/matches', [GameController::class, 'store']);
+Route::post('/matches/{id}', [GameController::class, 'update']);
+Route::delete('/matches/{id}', [GameController::class, 'delete']);
 
 
 // Game detail
-Route::post('/match-detail',[GameDetailController::class, 'store']);
-Route::post('/match-detail/{id}',[GameDetailController::class, 'update']);
-Route::delete('/match-detail/{id}',[GameDetailController::class, 'delete']);
+Route::post('/match-detail', [GameDetailController::class, 'store']);
+Route::post('/match-detail/{id}', [GameDetailController::class, 'update']);
+Route::delete('/match-detail/{id}', [GameDetailController::class, 'delete']);
 
 
 // Contract
-Route::get('/contracts',[ContractController::class, 'index']);
-Route::get('/contracts/{id}',[ContractController::class, 'show']);
+Route::get('/contracts', [ContractController::class, 'index']);
+Route::get('/contracts/{id}', [ContractController::class, 'show']);
 Route::get('contracts/type/{type}', [ContractController::class, 'getByType']);
-Route::post('/contracts',[ContractController::class, 'store']);
-Route::post('/contracts/{id}',[ContractController::class, 'update']);
-Route::delete('/contracts/{id}',[ContractController::class, 'delete']);
+Route::post('/contracts', [ContractController::class, 'store']);
+Route::post('/contracts/{id}', [ContractController::class, 'update']);
+Route::delete('/contracts/{id}', [ContractController::class, 'delete']);
 
 // User
 
