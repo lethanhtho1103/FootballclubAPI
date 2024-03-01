@@ -125,7 +125,14 @@ class PlayerController extends Controller
             $userID = UserHelper::generateUserID('P');
 
             // Upload ảnh với sự trợ giúp của UploadService
-            $imagePath = $this->uploadService->uploadImage($request, 'user', $userID);
+            // if($request->hasFile('image')){
+            //     $imagePath = $this->uploadService->uploadImage($request, 'user', $userID);
+            // }
+            // else{
+            //     $imagePath = null;
+            // }
+
+            $imagePath = $request->hasFile('image') ? $this->uploadService->uploadImage($request, 'user', $userID) : null;
 
             $user = User::create([
                 'user_id' => $userID,
@@ -166,12 +173,22 @@ class PlayerController extends Controller
                     'email',
                     Rule::unique('users', 'email')->ignore($user_id, 'user_id'),
                 ],
-                'date_of_birth' => 'nullable|date',
+                'date_of_birth' => [
+                    'nullable',
+                    'date',
+                    'before_or_equal:' . now()->format('Y-m-d'),
+                ],
                 'nationality' => 'nullable|string|max:255',
                 'image' => 'image|mimes:jpeg,png,jpg,webp,PNG,JPG|max:2048',
                 'flag' => 'nullable|string|max:255',
                 'position' => 'nullable|string|max:255',
-                'jersey_number' => 'nullable|string|max:255',
+                'jersey_number' => [
+                    'nullable',
+                    'integer',
+                    'min:1',
+                    'max:99',
+                    Rule::unique('players', 'jersey_number')->ignore($user_id, 'user_id'),
+                ],
                 'goal' => 'nullable|integer',
                 'assist' => 'nullable|integer',
                 'detail' => 'nullable|string',
@@ -181,9 +198,6 @@ class PlayerController extends Controller
             $player = Player::where('user_id', $user_id)->first();
 
             if ($player) {
-                // Lấy các quy tắc xác thực từ ValidationService
-
-
                 // Tìm người dùng liên quan và cập nhật thông tin người dùng
                 $user = User::where('user_id', $user_id)->first();
 
