@@ -29,6 +29,7 @@ class ValidationService
             'wins' => 'integer',
             'losses' => 'integer',
             'draws' => 'integer',
+            'detail' => 'string',
         ];
     }
 
@@ -37,6 +38,7 @@ class ValidationService
         return [
             'position' => 'string|max:50',
             'jersey_number' => 'unique:players,jersey_number|integer|min:1|max:99',
+            'detail' => 'string',
         ];
     }
 

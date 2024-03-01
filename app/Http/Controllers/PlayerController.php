@@ -153,6 +153,7 @@ class PlayerController extends Controller
                 'assist' => 0,
                 'position' => $request['position'],
                 'jersey_number' => $request['jersey_number'],
+                'detail' => $request['detail'],
             ]);
 
             return response()->json(['message' => 'Player registered successfully', 'user' => $user]);
