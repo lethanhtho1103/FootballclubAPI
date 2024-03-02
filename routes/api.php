@@ -51,9 +51,7 @@ Route::group([
         'middleware' => 'check.admin.staff',
     ], function () {
         // // Player
-        Route::post('/players', [PlayerController::class, 'store']);
-        Route::post('/players/{user_id}', [PlayerController::class, 'update']);
-        Route::delete('/players/{user_id}', [PlayerController::class, 'delete']);
+
 
         // // Coaches
         // Route::post('/coaches', [CoachController::class, 'store']);
@@ -97,7 +95,9 @@ Route::delete('/clubs/{id}', [ClubController::class, 'delete']);
 Route::get('/players', [PlayerController::class, 'index']);
 Route::get('/players/{slug}', [PlayerController::class, 'show']);
 Route::get('/players/id/{user_id}', [PlayerController::class, 'showId']);
-
+Route::post('/players', [PlayerController::class, 'store']);
+Route::post('/players/{user_id}', [PlayerController::class, 'update']);
+Route::delete('/players/{user_id}', [PlayerController::class, 'delete']);
 
 // Coaches
 Route::get('/coaches', [CoachController::class, 'index']);

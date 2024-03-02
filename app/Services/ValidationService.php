@@ -19,7 +19,7 @@ class ValidationService
             ],
             'nationality' => 'string|max:50',
             'flag' => 'string|max:10',
-            'image' => 'image|mimes:jpeg,png,jpg,webp,PNG,JPG|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,webp,PNG,JPG|max:2048',
         ];
     }
 
@@ -38,7 +38,7 @@ class ValidationService
         return [
             'position' => 'string|max:50',
             'jersey_number' => 'unique:players,jersey_number|integer|min:1|max:99',
-            'detail' => 'string',
+            'detail' => 'nullable|string',
         ];
     }
 
