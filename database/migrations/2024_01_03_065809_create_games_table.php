@@ -19,7 +19,7 @@ return new class extends Migration
             $table->time('game_time');
             $table->integer('goals_scored')->default(0);
             $table->integer('goals_conceded')->default(0);
-            $table->char('result', 5);
+            $table->char('result', 5)->nullable();
             $table->string('state', 100);
             $table->integer('host')->default(1);
             $table->integer('remaining_seats')->default(0);

@@ -63,12 +63,12 @@ class GameController extends Controller
     {
         try {
             $historyMatches = Game::with('club', 'stadium', 'gameDetail')
-                ->where('state', 'completed')
+                ->where('state', 'finished')
                 ->get();
 
             return response()->json(['history_matches' => GameResource::collection($historyMatches)], 200);
         } catch (ModelNotFoundException $e) {
-            return response()->json(['message' => 'No completed matches found.'], 404);
+            return response()->json(['message' => 'No finished matches found.'], 404);
         } catch (Exception $e) {
             return response()->json(['message' => $e->getMessage()], 500);
         }
