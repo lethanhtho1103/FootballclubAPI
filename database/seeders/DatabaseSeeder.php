@@ -47,7 +47,16 @@ class DatabaseSeeder extends Seeder
                 'date_of_birth' => '2002-03-03',
                 'nationality' => 'Vietnam',
                 'role_id' => 1, // ID của quyền admin
-            ]
+            ],
+            [
+                'user_id' => 'U0000001',
+                'name' => 'Customer',
+                'email' => 'customer@gmail.com',
+                'password' => Hash::make('password'),
+                'date_of_birth' => '2002-03-03',
+                'nationality' => 'Vietnam',
+                'role_id' => 5, // ID của quyền admin
+            ],
         ];
 
         // Chèn dữ liệu vào bảng Users
