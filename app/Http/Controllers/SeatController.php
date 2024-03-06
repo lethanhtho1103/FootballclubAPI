@@ -14,7 +14,7 @@ class SeatController extends Controller
     public function index()
     {
         try {
-            $seats = Seat::all();
+            $seats = Seat::orderBy('stand')->orderBy('seat_number')->get();
             return response()->json(['seats' => SeatResource::collection($seats)], 200);
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
