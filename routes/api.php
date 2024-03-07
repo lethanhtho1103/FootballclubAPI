@@ -4,6 +4,7 @@ use App\Http\Controllers\ClubController;
 use App\Http\Controllers\ContractController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\GameDetailController;
+use App\Http\Controllers\SeatController;
 use App\Http\Controllers\StadiumController;
 use App\Http\Controllers\TestController;
 use Illuminate\Http\Request;
@@ -14,6 +15,7 @@ use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\CoachController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TeamLineupController;
+use App\Http\Controllers\TicketController;
 
 /*
 |--------------------------------------------------------------------------
@@ -151,8 +153,18 @@ Route::post('/lineup', [TeamLineupController::class, 'store']);
 Route::post('/lineup/{id}', [TeamLineupController::class, 'update']);
 Route::delete('/lineup/{id}', [TeamLineupController::class, 'delete']);
 
+// Seat
+Route::get('/seats',[SeatController::class, 'index']);
+Route::get('/seats/{id}',[SeatController::class, 'show']);
+Route::post('/seats/create',[SeatController::class, 'create']);
+Route::post('/seats/update',[SeatController::class, 'update']);
+Route::post('/seats/delete',[SeatController::class, 'destroy']);
 
-
+// Ticket
+Route::get('/tickets', [TicketController::class, 'index']);
+Route::get('/tickets/{id}', [TicketController::class, 'show']);
+Route::post('/tickets/create', [TicketController::class, 'create']);
+Route::post('/tickets/update', [TicketController::class, 'update']);
 
 //Test
 
