@@ -63,6 +63,22 @@ class CoachController extends Controller
         }
     }
 
+    public function showId($id)
+    {
+        try {
+            $coach = Coach::join('users', 'coaches.user_id', '=', 'users.user_id')
+                ->select('coaches.*', 'users.*')
+                ->where('users.user_id', $id)
+                ->firstOrFail();
+
+            $coachResource = new CoachResource($coach);
+
+            return response()->json(['coach' => $coachResource], 200);
+        } catch (Exception $e) {
+            return response()->json(['message' => $e->getMessage()], 404);
+        }
+    }
+
     public function store(Request $request)
     {
         try {

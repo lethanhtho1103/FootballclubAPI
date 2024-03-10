@@ -49,10 +49,16 @@ class UserController extends Controller
     public function store(Request $request)
     {
         try {
-            $validatedData = $this->validationService->getUserValidationRules($request);
-            $validatedData['confirm_password'] = 'required|string|same:password';
+
+            $validatedData = $request->validate([
+                'name' => 'required|string|max:50',
+                'email' => 'required|email|unique:users,Email',
+                'password' => 'required|string|min:8|max:50',
+                'confirm_password' => 'required|string|same:password'
+
+            ]);
             // Thực hiện xác thực dữ liệu
-            $this->validate($request, $validatedData);
+            // $this->validate($request, $validatedData);
 
             $userID = UserHelper::generateUserID('U');
 

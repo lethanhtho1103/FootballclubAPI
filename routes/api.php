@@ -104,6 +104,7 @@ Route::delete('/players/{user_id}', [PlayerController::class, 'delete']);
 // Coaches
 Route::get('/coaches', [CoachController::class, 'index']);
 Route::get('/coaches/{slug}', [CoachController::class, 'show']);
+Route::get('/coaches/id/{user_id}', [CoachController::class, 'showId']);
 Route::post('/coaches', [CoachController::class, 'store']);
 Route::post('/coaches/{user_id}', [CoachController::class, 'update']);
 Route::delete('/coaches/{user_id}', [CoachController::class, 'delete']);
