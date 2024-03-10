@@ -78,7 +78,7 @@ class GameController extends Controller
     {
         try {
             $upcomingMatches = Game::with('club', 'stadium', 'gameDetail')
-                ->whereIn('state', ['coming_up', 'pending'])
+                ->whereIn('state', ['coming_up', 'pending', 'upcoming',])
                 ->get();
 
             return response()->json(['upcoming_matches' => GameResource::collection($upcomingMatches)], 200);
