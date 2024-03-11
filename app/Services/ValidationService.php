@@ -26,6 +26,7 @@ class ValidationService
     public function getCoachValidationRules($request)
     {
         return [
+            'position' => 'in:head,assistant,fitness,goalkeeping,youth,tactical,rehabilitation,consultant',
             'wins' => 'integer',
             'losses' => 'integer',
             'draws' => 'integer',

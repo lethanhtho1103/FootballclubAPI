@@ -101,6 +101,7 @@ class CoachController extends Controller
                 'email' => $request['email'],
                 'password' => Hash::make($request['password']),
                 'date_of_birth' => $request['date_of_birth'],
+                'flag' => $request['flag'],
                 'nationality' => $request['nationality'],
                 'role_id' => 3,
                 'image' => $imagesPath,
@@ -108,6 +109,7 @@ class CoachController extends Controller
 
             $coach = Coach::create([
                 'user_id' => $userID,
+                'position' => $request['position'],
                 'wins' => $request['wins'] ?? 0,
                 'losses' => $request['losses'] ?? 0,
                 'draws' => $request['draws'] ?? 0,
@@ -135,6 +137,7 @@ class CoachController extends Controller
                 'nationality' => 'nullable|string|max:255',
                 'image' => 'image|mimes:jpeg,png,jpg,webp,PNG,JPG|max:2048',
                 'flag' => 'nullable|string|max:255',
+                'position' => 'nullable|in:head,assistant,fitness,goalkeeping,youth,tactical,rehabilitation,consultant',
                 'wins' => 'nullable|integer',
                 'losses' => 'nullable|integer',
                 'draws' => 'nullable|string',
@@ -185,7 +188,7 @@ class CoachController extends Controller
                 }
 
                 // Trả về thông báo thành công và thông tin cầu thủ cập nhật
-                return response()->json(['message' => 'Coach updated successfully', 'Coach' => new CoachResource($coach)], 200);
+                return response()->json(['message' => 'Coach updated successfully', 'coach' => new CoachResource($coach)], 200);
             } else {
                 // Trả về thông báo nếu cầu thủ không tồn tại
                 return response()->json(['message' => 'Coach not found'], 404);
