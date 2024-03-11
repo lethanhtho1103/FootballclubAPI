@@ -16,6 +16,7 @@ use App\Http\Controllers\CoachController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TeamLineupController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\PaypalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -170,6 +171,8 @@ Route::post('/tickets/update', [TicketController::class, 'update']);
 //Test
 
 
+//Paypal
+Route::post('/paypal/create-order', [PayPalController::class, 'createOrder']);
 
 
 //Test function

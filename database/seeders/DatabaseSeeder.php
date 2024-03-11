@@ -306,6 +306,13 @@ class DatabaseSeeder extends Seeder
                 'nationality' => 'Spain',
                 'role_id' => 3, // ID của quyền HLV
             ],
+            [
+                'name' => 'Mike Anteta',
+                'email' => 'anteta@example.com',
+                'date_of_birth' => '1981-01-18',
+                'nationality' => 'Spain',
+                'role_id' => 3, // ID của quyền HLV
+            ],
         ];
 
         foreach ($manCityCoaches as $coachData) {

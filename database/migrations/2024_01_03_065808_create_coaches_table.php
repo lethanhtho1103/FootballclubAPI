@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('coaches', function (Blueprint $table) {
             $table->string('user_id', 10)->primary();
+            $table->string('position', 30)->default('head');
             $table->integer('wins')->default(0);
             $table->integer('losses')->default(0);
             $table->integer('draws')->default(0);

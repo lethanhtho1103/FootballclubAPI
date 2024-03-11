@@ -22,6 +22,7 @@ class CoachResource extends JsonResource
             'nationality' => $this->user->nationality,
             'flag' => $this->user->flag,
             'image' => $this->user->image,
+            'position' => $this->position,
             'wins' => $this->wins,
             'losses' => $this->losses,
             'draws' => $this->draws,
